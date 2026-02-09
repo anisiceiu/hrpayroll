@@ -1,0 +1,238 @@
+@model HRPayroll.Domain.Entities.Payroll.PayrollRun
+
+@{
+    ViewData["Title"] = "Payroll Details";
+    ViewData["SubTitle"] = "View Payroll Run Details";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">@Model.RunCode - @Model.Name</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            @if (Model.Status == HRPayroll.Domain.Enums.PayrollRunStatus.Draft)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm ml-2">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            }
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.RunCode)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.RunCode)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt class="col-sm-4">
+                        Period
+                    </dt>
+                    <dd class="col-sm-8">
+                        @if (Model.StartDate.HasValue && Model.EndDate.HasValue)
+                        {
+                            @Model.StartDate.Value.ToString("dd/MM/yyyy") @: - @Model.EndDate.Value.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.PaymentDate)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @if (Model.PaymentDate.HasValue)
+                        {
+                            @Model.PaymentDate.Value.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @switch (Model.Status)
+                        {
+                            case HRPayroll.Domain.Enums.PayrollRunStatus.Draft:
+                                <span class="badge badge-secondary">Draft</span>
+                                break;
+                            case HRPayroll.Domain.Enums.PayrollRunStatus.PendingApproval:
+                                <span class="badge badge-warning">Pending Approval</span>
+                                break;
+                            case HRPayroll.Domain.Enums.PayrollRunStatus.Approved:
+                                <span class="badge badge-info">Approved</span>
+                                break;
+                            case HRPayroll.Domain.Enums.PayrollRunStatus.Processed:
+                                <span class="badge badge-primary">Processed</span>
+                                break;
+                            case HRPayroll.Domain.Enums.PayrollRunStatus.Paid:
+                                <span class="badge badge-success">Paid</span>
+                                break;
+                            case HRPayroll.Domain.Enums.PayrollRunStatus.Cancelled:
+                                <span class="badge badge-danger">Cancelled</span>
+                                break;
+                            default:
+                                <span class="badge badge-secondary">@Model.Status</span>
+                                break;
+                        }
+                    </dd>
+                    <dt class="col-sm-4">
+                        Total Employees
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.TotalEmployees)
+                    </dd>
+                    <dt class="col-sm-4">
+                        Total Gross
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.TotalGrossSalary.ToString("C")
+                    </dd>
+                    <dt class="col-sm-4">
+                        Total Deductions
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.TotalDeductions.ToString("C")
+                    </dd>
+                    <dt class="col-sm-4">
+                        Total Net Salary
+                    </dt>
+                    <dd class="col-sm-8">
+                        <strong>@Model.TotalNetSalary.ToString("C")</strong>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        @if (Model.Status == HRPayroll.Domain.Enums.PayrollRunStatus.PendingApproval)
+        {
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <a asp-action="Approve" asp-route-id="@Model.Id" class="btn btn-success">
+                        <i class="fas fa-check"></i> Approve Payroll
+                    </a>
+                </div>
+            </div>
+        }
+        @if (Model.Status == HRPayroll.Domain.Enums.PayrollRunStatus.Approved)
+        {
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <a asp-action="Process" asp-route-id="@Model.Id" class="btn btn-primary">
+                        <i class="fas fa-cog"></i> Process Payroll
+                    </a>
+                </div>
+            </div>
+        }
+        @if (Model.Status == HRPayroll.Domain.Enums.PayrollRunStatus.Processed)
+        {
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <a asp-action="MarkAsPaid" asp-route-id="@Model.Id" class="btn btn-success">
+                        <i class="fas fa-money-bill"></i> Mark As Paid
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (ViewBag.PayrollDetails != null && ((IEnumerable<HRPayroll.Domain.Entities.Payroll.PayrollDetail>)ViewBag.PayrollDetails).Any())
+{
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Employee Payroll Details</h3>
+        </div>
+        <div class="card-body">
+            <table id="detailsTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Basic Salary</th>
+                        <th>Gross Salary</th>
+                        <th>Total Earnings</th>
+                        <th>Total Deductions</th>
+                        <th>Net Salary</th>
+                        <th>Payment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detail in (IEnumerable<HRPayroll.Domain.Entities.Payroll.PayrollDetail>)ViewBag.PayrollDetails)
+                    {
+                        <tr>
+                            <td>
+                                @(detail.Employee?.FullName ?? "N/A")
+                            </td>
+                            <td>
+                                @detail.BasicSalary.ToString("C")
+                            </td>
+                            <td>
+                                @detail.GrossSalary.ToString("C")
+                            </td>
+                            <td>
+                                @detail.TotalEarnings.ToString("C")
+                            </td>
+                            <td>
+                                @detail.TotalDeductions.ToString("C")
+                            </td>
+                            <td>
+                                <strong>@detail.NetSalary.ToString("C")</strong>
+                            </td>
+                            <td>
+                                @switch (detail.PaymentStatus)
+                                {
+                                    case HRPayroll.Domain.Enums.PaymentStatus.Pending:
+                                        <span class="badge badge-warning">Pending</span>
+                                        break;
+                                    case HRPayroll.Domain.Enums.PaymentStatus.Paid:
+                                        <span class="badge badge-success">Paid</span>
+                                        break;
+                                    case HRPayroll.Domain.Enums.PaymentStatus.Failed:
+                                        <span class="badge badge-danger">Failed</span>
+                                        break;
+                                    case HRPayroll.Domain.Enums.PaymentStatus.OnHold:
+                                        <span class="badge badge-secondary">On Hold</span>
+                                        break;
+                                    default:
+                                        <span class="badge badge-secondary">@detail.PaymentStatus</span>
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("#detailsTable").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#detailsTable_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+}

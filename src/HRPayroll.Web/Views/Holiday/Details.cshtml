@@ -1,0 +1,109 @@
+@model HRPayroll.Domain.Entities.HR.Holiday
+
+@{
+    ViewData["Title"] = "Holiday Details";
+    ViewData["SubTitle"] = "View Holiday Details";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Holiday Details</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm ml-2">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.NameBN)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.NameBN ?? "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Date)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Date.ToString("dd/MM/yyyy")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.DayOfWeek)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.DayOfWeek)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Type)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @switch (Model.Type)
+                        {
+                            case HRPayroll.Domain.Enums.HolidayType.National:
+                                <span class="badge badge-primary">National</span>
+                                break;
+                            case HRPayroll.Domain.Enums.HolidayType.Festival:
+                                <span class="badge badge-success">Festival</span>
+                                break;
+                            case HRPayroll.Domain.Enums.HolidayType.Religious:
+                                <span class="badge badge-info">Religious</span>
+                                break;
+                            case HRPayroll.Domain.Enums.HolidayType.Optional:
+                                <span class="badge badge-warning">Optional</span>
+                                break;
+                            case HRPayroll.Domain.Enums.HolidayType.Weekly:
+                                <span class="badge badge-secondary">Weekly</span>
+                                break;
+                            case HRPayroll.Domain.Enums.HolidayType.Special:
+                                <span class="badge badge-dark">Special</span>
+                                break;
+                            default:
+                                <span class="badge badge-secondary">@Model.Type</span>
+                                break;
+                        }
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.IsRepeatAnnually)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.IsRepeatAnnually ? "Yes" : "No")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Country)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Country)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @(Model.Description ?? "-")
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

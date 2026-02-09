@@ -1,0 +1,54 @@
+@model HRPayroll.Domain.Entities.Payroll.PayrollRun
+
+@{
+    ViewData["Title"] = "Approve Payroll";
+    ViewData["SubTitle"] = "Approve Payroll Run";
+}
+
+<div class="card">
+    <div class="card-header bg-success">
+        <h3 class="card-title">Approve Payroll Run</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <h4>You are about to approve the following payroll run:</h4>
+        <div class="alert alert-success mt-3">
+            <strong>@Model.RunCode</strong> - @Model.Name
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Total Employees</dt>
+                    <dd class="col-sm-8">@Model.TotalEmployees</dd>
+                    <dt class="col-sm-4">Total Gross Salary</dt>
+                    <dd class="col-sm-8">@Model.TotalGrossSalary.ToString("C")</dd>
+                    <dt class="col-sm-4">Total Deductions</dt>
+                    <dd class="col-sm-8">@Model.TotalDeductions.ToString("C")</dd>
+                    <dt class="col-sm-4">Total Net Salary</dt>
+                    <dd class="col-sm-8"><strong>@Model.TotalNetSalary.ToString("C")</strong></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <form asp-action="Approve">
+        <div class="card-body">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label>Approver ID</label>
+                <input type="number" name="approverId" class="form-control" placeholder="Enter approver ID" required />
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-check"></i> Confirm Approval
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>

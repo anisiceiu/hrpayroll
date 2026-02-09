@@ -1,0 +1,157 @@
+@model HRPayroll.Domain.Entities.HR.Attendance
+
+@{
+    ViewData["Title"] = "Attendance Details";
+    ViewData["SubTitle"] = "View Attendance Details";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Attendance Details</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm ml-2">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Employee)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.Employee?.FullName ?? "N/A")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Date)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Date.ToString("dd/MM/yyyy")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.ClockInTime)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.ClockInTime.HasValue ? Model.ClockInTime.Value.Hours.ToString("D2") + ":" + Model.ClockInTime.Value.Minutes.ToString("D2") : "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.ClockOutTime)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.ClockOutTime.HasValue ? Model.ClockOutTime.Value.Hours.ToString("D2") + ":" + Model.ClockOutTime.Value.Minutes.ToString("D2") : "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.WorkingHours)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.WorkingHours.HasValue ? Model.WorkingHours.Value.ToString("F2") : "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.OvertimeHours)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.OvertimeHours.HasValue ? Model.OvertimeHours.Value.ToString("F2") : "-")
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @switch (Model.Status)
+                        {
+                            case HRPayroll.Domain.Enums.AttendanceStatus.Present:
+                                <span class="badge badge-success">Present</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.Absent:
+                                <span class="badge badge-danger">Absent</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.Late:
+                                <span class="badge badge-warning">Late</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.HalfDay:
+                                <span class="badge badge-info">Half Day</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.Leave:
+                                <span class="badge badge-secondary">Leave</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.Holiday:
+                                <span class="badge badge-primary">Holiday</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.Weekend:
+                                <span class="badge badge-dark">Weekend</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.OnDuty:
+                                <span class="badge badge-light">On Duty</span>
+                                break;
+                            case HRPayroll.Domain.Enums.AttendanceStatus.Compensatory:
+                                <span class="badge badge-warning">Compensatory</span>
+                                break;
+                            default:
+                                <span class="badge badge-secondary">@Model.Status</span>
+                                break;
+                        }
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.LateMinutes)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.LateMinutes.HasValue ? Model.LateMinutes.Value.ToString() + " minutes" : "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.EarlyLeavingMinutes)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.EarlyLeavingMinutes.HasValue ? Model.EarlyLeavingMinutes.Value.ToString() + " minutes" : "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.EntryType)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.EntryType.ToString()
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.BiometricDeviceId)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.BiometricDeviceId ?? "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.BiometricLogId)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.BiometricLogId ?? "-")
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Remarks)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @(Model.Remarks ?? "-")
+                    </dd>
+                    @if (Model.ApprovalDate.HasValue)
+                    {
+                        <dt class="col-sm-2">
+                            Approval Information
+                        </dt>
+                        <dd class="col-sm-10">
+                            Approved by: @(Model.Approver?.FullName ?? "N/A") on @Model.ApprovalDate.Value.ToString("dd/MM/yyyy")
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

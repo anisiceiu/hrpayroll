@@ -1,0 +1,168 @@
+@model HRPayroll.Domain.Entities.Payroll.SalaryStructure
+
+@{
+    ViewData["Title"] = "Salary Structure Management";
+    ViewData["SubTitle"] = "Edit Salary Structure";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Edit Salary Structure</h3>
+    </div>
+    <form asp-action="Edit">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="GrossSalary" />
+            <input type="hidden" asp-for="TotalDeductions" />
+            <input type="hidden" asp-for="NetSalary" />
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="EmployeeId" class="control-label">Employee</label>
+                        <select asp-for="EmployeeId" class="form-control select2bs4" asp-items="ViewBag.EmployeeList">
+                            <option value="">-- Select Employee --</option>
+                        </select>
+                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Structure Name</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="EffectiveFrom" class="control-label">Effective From</label>
+                        <input asp-for="EffectiveFrom" type="date" class="form-control" />
+                        <span asp-validation-for="EffectiveFrom" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="EffectiveTo" class="control-label">Effective To (Optional)</label>
+                        <input asp-for="EffectiveTo" type="date" class="form-control" />
+                        <span asp-validation-for="EffectiveTo" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="mt-4 mb-3">Salary Components</h4>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="BasicSalary" class="control-label">Basic Salary</label>
+                        <input asp-for="BasicSalary" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="BasicSalary" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="HouseRentAllowance" class="control-label">House Rent Allowance</label>
+                        <input asp-for="HouseRentAllowance" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="HouseRentAllowance" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="TransportAllowance" class="control-label">Transport Allowance</label>
+                        <input asp-for="TransportAllowance" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="TransportAllowance" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="MedicalAllowance" class="control-label">Medical Allowance</label>
+                        <input asp-for="MedicalAllowance" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="MedicalAllowance" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ConveyanceAllowance" class="control-label">Conveyance Allowance</label>
+                        <input asp-for="ConveyanceAllowance" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="ConveyanceAllowance" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="OtherAllowances" class="control-label">Other Allowances</label>
+                        <input asp-for="OtherAllowances" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="OtherAllowances" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="mt-4 mb-3">Deductions</h4>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ProvidentFundPercentage" class="control-label">Provident Fund (%)</label>
+                        <input asp-for="ProvidentFundPercentage" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="ProvidentFundPercentage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="TaxDeduction" class="control-label">Tax Deduction</label>
+                        <input asp-for="TaxDeduction" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="TaxDeduction" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="OtherDeductions" class="control-label">Other Deductions</label>
+                        <input asp-for="OtherDeductions" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="OtherDeductions" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="Notes" class="control-label">Notes</label>
+                        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <a asp-action="Index" class="btn btn-default float-right">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function () {
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            });
+        });
+    </script>
+}

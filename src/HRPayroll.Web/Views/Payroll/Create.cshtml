@@ -1,0 +1,80 @@
+@model HRPayroll.Domain.Entities.Payroll.PayrollRun
+
+@{
+    ViewData["Title"] = "New Payroll Run";
+    ViewData["SubTitle"] = "Create New Payroll Run";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">New Payroll Run</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <form asp-action="Create">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Month">Month</label>
+                        <select asp-for="Month" class="form-control" asp-items="ViewBag.MonthList">
+                            <option value="">-- Select Month --</option>
+                        </select>
+                        <span asp-validation-for="Month" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Year">Year</label>
+                        <select asp-for="Year" class="form-control" asp-items="ViewBag.YearList">
+                            <option value="">-- Select Year --</option>
+                        </select>
+                        <span asp-validation-for="Year" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="StartDate">Start Date</label>
+                        <input asp-for="StartDate" type="date" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="EndDate">End Date</label>
+                        <input asp-for="EndDate" type="date" class="form-control" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PaymentDate">Payment Date</label>
+                        <input asp-for="PaymentDate" type="date" class="form-control" />
+                        <span asp-validation-for="PaymentDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notes">Notes</label>
+                <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Enter any notes"></textarea>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Create Payroll Run
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,61 @@
+@model HRPayroll.Domain.Entities.HR.Designation
+@{
+    ViewData["Title"] = "Designation Details";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Designation Details</h3>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NameBN)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.NameBN)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Code)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Code)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Description)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Description)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Grade)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Grade)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IsActive)</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactive</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedAt)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedAt)</dd>
+
+                    @if (Model.UpdatedAt != null)
+                    {
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UpdatedAt)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.UpdatedAt)</dd>
+                    }
+                </dl>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a asp-action="Index" class="btn btn-default float-right">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

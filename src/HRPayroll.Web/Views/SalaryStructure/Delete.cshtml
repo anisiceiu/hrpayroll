@@ -1,0 +1,63 @@
+@model HRPayroll.Domain.Entities.Payroll.SalaryStructure
+
+@{
+    ViewData["Title"] = "Salary Structure Management";
+    ViewData["SubTitle"] = "Delete Salary Structure";
+}
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Delete Salary Structure</h3>
+    </div>
+    <form asp-action="Delete">
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <h5><i class="icon fas fa-ban"></i> Are you sure you want to delete this salary structure?</h5>
+                <p>This action cannot be undone.</p>
+            </div>
+            
+            <input type="hidden" asp-for="Id" />
+            
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Employee)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Employee.FullName)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.BasicSalary)
+                </dt>
+                <dd class="col-sm-9">
+                    @Model.BasicSalary.ToString("N2")
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.GrossSalary)
+                </dt>
+                <dd class="col-sm-9">
+                    @Model.GrossSalary.ToString("N2")
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.NetSalary)
+                </dt>
+                <dd class="col-sm-9">
+                    @Model.NetSalary.ToString("N2")
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+            <a asp-action="Index" class="btn btn-default float-right">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>

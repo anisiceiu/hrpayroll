@@ -1,0 +1,62 @@
+@{
+    ViewData["Title"] = "Attendance Date Range";
+    ViewData["SubTitle"] = "Generate Attendance Report by Date Range";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Attendance Date Range Report</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <form asp-action="DateRange">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label">Employee</label>
+                        @Html.DropDownList("employeeId", (SelectList)ViewBag.EmployeeId, "-- All Employees --", new { @class = "form-control" })
+                        <span class="text-muted">Leave empty to view all employees</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Start Date</label>
+                        <input name="startDate" class="form-control" type="date" required />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">End Date</label>
+                        <input name="endDate" class="form-control" type="date" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Generate Report
+            </button>
+            <a asp-action="Index" class="btn btn-secondary float-right">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Set default dates to current month
+        $(document).ready(function () {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+            $('input[name="startDate"]').val(firstDay.toISOString().split('T')[0]);
+            $('input[name="endDate"]').val(lastDay.toISOString().split('T')[0]);
+        });
+    </script>
+}

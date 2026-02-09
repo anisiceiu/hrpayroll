@@ -1,0 +1,68 @@
+@model HRPayroll.Domain.Entities.HR.Holiday
+
+@{
+    ViewData["Title"] = "Edit Holiday";
+    ViewData["SubTitle"] = "Update Holiday Details";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Edit Holiday</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <form asp-action="Edit">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="DayOfWeek" />
+            <div class="form-group">
+                <label asp-for="Name">Holiday Name</label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NameBN">Holiday Name (Bangla)</label>
+                <input asp-for="NameBN" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Date">Date</label>
+                <input asp-for="Date" type="date" class="form-control" required />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Type">Holiday Type</label>
+                <select asp-for="Type" class="form-control" asp-items="ViewBag.TypeList">
+                    <option value="">-- Select Type --</option>
+                </select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="IsRepeatAnnually" class="form-check-input" />
+                    <label asp-for="IsRepeatAnnually" class="form-check-label">Repeat Annually</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country">Country</label>
+                <input asp-for="Country" class="form-control" />
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

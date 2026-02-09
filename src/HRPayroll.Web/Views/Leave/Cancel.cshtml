@@ -1,0 +1,103 @@
+@model HRPayroll.Domain.Entities.HR.Leave
+
+@{
+    ViewData["Title"] = "Cancel Leave";
+    ViewData["SubTitle"] = "Cancel Leave Request";
+}
+
+<div class="card card-warning">
+    <div class="card-header">
+        <h3 class="card-title">Cancel Leave Request</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="icon fas fa-exclamation-triangle"></i>
+                You are about to cancel this leave request. Please provide a reason for cancellation.
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            Employee
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.Employee?.FullName ?? "N/A")
+                        </dd>
+                        <dt class="col-sm-4">
+                            Leave Type
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.LeaveType?.Name ?? "N/A")
+                        </dd>
+                        <dt class="col-sm-4">
+                            Start Date
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.StartDate.ToString("dd/MM/yyyy")
+                        </dd>
+                        <dt class="col-sm-4">
+                            End Date
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.EndDate.ToString("dd/MM/yyyy")
+                        </dd>
+                        <dt class="col-sm-4">
+                            Total Days
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.TotalDays days
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            Status
+                        </dt>
+                        <dd class="col-sm-8">
+                            @switch (Model.Status)
+                            {
+                                case HRPayroll.Domain.Enums.LeaveStatus.Pending:
+                                    <span class="badge badge-warning">Pending</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.LeaveStatus.Approved:
+                                    <span class="badge badge-success">Approved</span>
+                                    break;
+                                default:
+                                    <span class="badge badge-secondary">@Model.Status</span>
+                                    break;
+                            }
+                        </dd>
+                        <dt class="col-sm-4">
+                            Reason
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.Reason ?? "-")
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="reason" class="control-label">Cancellation Reason</label>
+                <textarea name="reason" id="reason" class="form-control" rows="3" placeholder="Please provide a reason for cancellation..." required></textarea>
+                <span class="text-danger">This field is required for cancellation.</span>
+            </div>
+            <input type="hidden" name="employeeId" value="@Model.EmployeeId" />
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-warning">
+                <i class="fas fa-times"></i> Cancel Leave
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary float-right">
+                <i class="fas fa-times"></i> Don't Cancel
+            </a>
+        </div>
+    </form>
+</div>

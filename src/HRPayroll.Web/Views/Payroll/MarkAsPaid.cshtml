@@ -1,0 +1,59 @@
+@model HRPayroll.Domain.Entities.Payroll.PayrollRun
+
+@{
+    ViewData["Title"] = "Mark As Paid";
+    ViewData["SubTitle"] = "Mark Payroll As Paid";
+}
+
+<div class="card">
+    <div class="card-header bg-success">
+        <h3 class="card-title">Mark Payroll As Paid</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <h4>You are about to mark the following payroll run as paid:</h4>
+        <div class="alert alert-success mt-3">
+            <strong>@Model.RunCode</strong> - @Model.Name
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Total Employees</dt>
+                    <dd class="col-sm-8">@Model.TotalEmployees</dd>
+                    <dt class="col-sm-4">Total Net Salary</dt>
+                    <dd class="col-sm-8"><strong>@Model.TotalNetSalary.ToString("C")</strong></dd>
+                    <dt class="col-sm-4">Payment Date</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.PaymentDate.HasValue)
+                        {
+                            @Model.PaymentDate.Value.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span>Not set</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="alert alert-info mt-3">
+            <i class="fas fa-info-circle"></i>
+            This will update the payment status of all employee payroll details to "Paid".
+        </div>
+    </div>
+    <form asp-action="MarkAsPaidConfirmed">
+        <input type="hidden" asp-for="Id" />
+        <div class="card-footer">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-money-bill"></i> Confirm Payment
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>

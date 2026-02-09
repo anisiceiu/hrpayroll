@@ -1,0 +1,126 @@
+@model IEnumerable<HRPayroll.Domain.Entities.HR.Leave>
+
+@{
+    ViewData["Title"] = "Leave Management";
+    ViewData["SubTitle"] = "Manage Leave Requests";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Leave Requests List</h3>
+        <div class="card-tools">
+            <a asp-action="Create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Apply New Leave
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="leaveTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LeaveType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TotalDays)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AppliedOn)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @(item.Employee?.FullName ?? "N/A")
+                        </td>
+                        <td>
+                            @(item.LeaveType?.Name ?? "N/A")
+                        </td>
+                        <td>
+                            @item.StartDate.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @item.EndDate.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalDays)
+                        </td>
+                        <td>
+                            @switch (item.Status)
+                            {
+                                case HRPayroll.Domain.Enums.LeaveStatus.Pending:
+                                    <span class="badge badge-warning">Pending</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.LeaveStatus.Approved:
+                                    <span class="badge badge-success">Approved</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.LeaveStatus.Rejected:
+                                    <span class="badge badge-danger">Rejected</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.LeaveStatus.Cancelled:
+                                    <span class="badge badge-secondary">Cancelled</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.LeaveStatus.Withdrawn:
+                                    <span class="badge badge-dark">Withdrawn</span>
+                                    break;
+                                default:
+                                    <span class="badge badge-secondary">@item.Status</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            @item.AppliedOn.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            @if (item.Status == HRPayroll.Domain.Enums.LeaveStatus.Pending)
+                            {
+                                <a asp-action="Approve" asp-route-id="@item.Id" class="btn btn-success btn-sm" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                <a asp-action="Reject" asp-route-id="@item.Id" class="btn btn-danger btn-sm" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                <a asp-action="Cancel" asp-route-id="@item.Id" class="btn btn-warning btn-sm" title="Cancel">
+                                    <i class="fas fa-ban"></i>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("#leaveTable").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "order": [[6, "desc"]],
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#leaveTable_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+}

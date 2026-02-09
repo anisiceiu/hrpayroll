@@ -1,0 +1,110 @@
+@model HRPayroll.Domain.Entities.HR.LeaveType
+
+@{
+    ViewData["Title"] = "Leave Type Details";
+    ViewData["SubTitle"] = "View Leave Type Details";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Leave Type Details</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm ml-2">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Code)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.NameBN)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.NameBN ?? "-")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.Description ?? "-")
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.IsPaidLeave)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.IsPaidLeave ? "Yes" : "No")
+                    </dd>
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.IsCarryForwardAllowed)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.IsCarryForwardAllowed ? "Yes" : "No")
+                    </dd>
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.MaxCarryForwardDays)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.MaxCarryForwardDays?.ToString() ?? "-")
+                    </dd>
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.MaxAccumulationDays)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.MaxAccumulationDays?.ToString() ?? "-")
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.RequiresApproval)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.RequiresApproval ? "Yes" : "No")
+                    </dd>
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.RequiresDocument)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.RequiresDocument ? "Yes" : "No")
+                    </dd>
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.ColorCode)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.ColorCode ?? "-")
+                    </dd>
+                    <dt class="col-sm-6">
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </dt>
+                    <dd class="col-sm-6">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

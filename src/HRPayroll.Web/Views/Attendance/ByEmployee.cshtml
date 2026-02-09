@@ -1,0 +1,138 @@
+@model IEnumerable<HRPayroll.Domain.Entities.HR.Attendance>
+
+@{
+    ViewData["Title"] = "Employee Attendance";
+    ViewData["SubTitle"] = "View Attendance for " + ViewBag.EmployeeName;
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Attendance for @ViewBag.EmployeeName</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a asp-action="DateRange" class="btn btn-info btn-sm ml-2">
+                <i class="fas fa-calendar"></i> Date Range
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (ViewBag.StartDate != null && ViewBag.EndDate != null)
+        {
+            <div class="mb-3">
+                <strong>Period:</strong> @ViewBag.StartDate.ToString("dd/MM/yyyy") - @ViewBag.EndDate.ToString("dd/MM/yyyy")
+            </div>
+        }
+        <table id="employeeAttendanceTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClockInTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ClockOutTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.WorkingHours)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OvertimeHours)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LateMinutes)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Date.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @(item.ClockInTime.HasValue ? item.ClockInTime.Value.Hours.ToString("D2") + ":" + item.ClockInTime.Value.Minutes.ToString("D2") : "-")
+                        </td>
+                        <td>
+                            @(item.ClockOutTime.HasValue ? item.ClockOutTime.Value.Hours.ToString("D2") + ":" + item.ClockOutTime.Value.Minutes.ToString("D2") : "-")
+                        </td>
+                        <td>
+                            @(item.WorkingHours.HasValue ? item.WorkingHours.Value.ToString("F2") : "-")
+                        </td>
+                        <td>
+                            @(item.OvertimeHours.HasValue ? item.OvertimeHours.Value.ToString("F2") : "-")
+                        </td>
+                        <td>
+                            @switch (item.Status)
+                            {
+                                case HRPayroll.Domain.Enums.AttendanceStatus.Present:
+                                    <span class="badge badge-success">Present</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.Absent:
+                                    <span class="badge badge-danger">Absent</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.Late:
+                                    <span class="badge badge-warning">Late</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.HalfDay:
+                                    <span class="badge badge-info">Half Day</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.Leave:
+                                    <span class="badge badge-secondary">Leave</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.Holiday:
+                                    <span class="badge badge-primary">Holiday</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.Weekend:
+                                    <span class="badge badge-dark">Weekend</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.OnDuty:
+                                    <span class="badge badge-light">On Duty</span>
+                                    break;
+                                case HRPayroll.Domain.Enums.AttendanceStatus.Compensatory:
+                                    <span class="badge badge-warning">Compensatory</span>
+                                    break;
+                                default:
+                                    <span class="badge badge-secondary">@item.Status</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            @(item.LateMinutes.HasValue ? item.LateMinutes.Value.ToString() + " min" : "-")
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("#employeeAttendanceTable").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#employeeAttendanceTable_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+}

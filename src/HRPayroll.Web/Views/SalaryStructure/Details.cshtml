@@ -1,0 +1,194 @@
+@model HRPayroll.Domain.Entities.Payroll.SalaryStructure
+
+@{
+    ViewData["Title"] = "Salary Structure Management";
+    ViewData["SubTitle"] = "Salary Structure Details";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Salary Structure Details</h3>
+        <div class="card-tools">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-default btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Employee)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Employee.FullName)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.EffectiveFrom)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.EffectiveFrom.ToString("dd/MM/yyyy")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.EffectiveTo)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.EffectiveTo.HasValue ? Model.EffectiveTo.Value.ToString("dd/MM/yyyy") : "N/A")
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        
+        <hr />
+        
+        <h4>Salary Components</h4>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-money-bill"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Basic Salary</span>
+                        <span class="info-box-number">@Model.BasicSalary.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-home"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">House Rent Allowance</span>
+                        <span class="info-box-number">@Model.HouseRentAllowance.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-car"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Transport Allowance</span>
+                        <span class="info-box-number">@Model.TransportAllowance.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-notes-medical"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Medical Allowance</span>
+                        <span class="info-box-number">@Model.MedicalAllowance.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-bus"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Conveyance Allowance</span>
+                        <span class="info-box-number">@Model.ConveyanceAllowance.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-plus"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Other Allowances</span>
+                        <span class="info-box-number">@Model.OtherAllowances.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr />
+        
+        <h4>Deductions</h4>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="info-box bg-danger">
+                    <span class="info-box-icon"><i class="fas fa-piggy-bank"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Provident Fund (%)</span>
+                        <span class="info-box-number">@Model.ProvidentFundPercentage.ToString("F2")%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-danger">
+                    <span class="info-box-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Tax Deduction</span>
+                        <span class="info-box-number">@Model.TaxDeduction.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-danger">
+                    <span class="info-box-icon"><i class="fas fa-minus-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Other Deductions</span>
+                        <span class="info-box-number">@Model.OtherDeductions.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr />
+        
+        <h4>Salary Summary</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="info-box bg-primary">
+                    <span class="info-box-icon"><i class="fas fa-wallet"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Gross Salary</span>
+                        <span class="info-box-number">@Model.GrossSalary.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box bg-danger">
+                    <span class="info-box-icon"><i class="fas fa-cut"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Deductions</span>
+                        <span class="info-box-number">@Model.TotalDeductions.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Net Salary</span>
+                        <span class="info-box-number">@Model.NetSalary.ToString("N2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        @if (!string.IsNullOrEmpty(Model.Notes))
+        {
+            <hr />
+            <h4>Notes</h4>
+            <p>@Model.Notes</p>
+        }
+    </div>
+</div>

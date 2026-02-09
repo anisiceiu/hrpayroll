@@ -1,0 +1,92 @@
+@model HRPayroll.Domain.Entities.HR.Leave
+
+@{
+    ViewData["Title"] = "Reject Leave";
+    ViewData["SubTitle"] = "Reject Leave Request";
+}
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Reject Leave Request</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <form asp-action="Reject" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <i class="icon fas fa-ban"></i>
+                You are about to reject this leave request. Please provide a reason for rejection.
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            Employee
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.Employee?.FullName ?? "N/A")
+                        </dd>
+                        <dt class="col-sm-4">
+                            Leave Type
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.LeaveType?.Name ?? "N/A")
+                        </dd>
+                        <dt class="col-sm-4">
+                            Start Date
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.StartDate.ToString("dd/MM/yyyy")
+                        </dd>
+                        <dt class="col-sm-4">
+                            End Date
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.EndDate.ToString("dd/MM/yyyy")
+                        </dd>
+                        <dt class="col-sm-4">
+                            Total Days
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.TotalDays days
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            Status
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge badge-warning">Pending</span>
+                        </dd>
+                        <dt class="col-sm-4">
+                            Reason
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.Reason ?? "-")
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="remarks" class="control-label">Rejection Reason</label>
+                <textarea name="remarks" id="remarks" class="form-control" rows="3" placeholder="Please provide a reason for rejection..." required></textarea>
+                <span class="text-danger">This field is required for rejection.</span>
+            </div>
+            <input type="hidden" name="approverId" value="1" />
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-ban"></i> Reject Leave
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary float-right">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>

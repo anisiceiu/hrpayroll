@@ -1,0 +1,122 @@
+@model HRPayroll.Domain.Entities.HR.LeaveType
+
+@{
+    ViewData["Title"] = "Create Leave Type";
+    ViewData["SubTitle"] = "Add New Leave Type";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Add New Leave Type</h3>
+        <div class="card-tools">
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <form asp-action="Create">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Code" class="control-label">Code</label>
+                        <input asp-for="Code" class="form-control" placeholder="e.g., EL, CL, SL" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g., Earned Leave" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="NameBN" class="control-label">Name (Bangla)</label>
+                        <input asp-for="NameBN" class="form-control" placeholder="বাংলা নাম" />
+                        <span asp-validation-for="NameBN" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ColorCode" class="control-label">Color Code</label>
+                        <input asp-for="ColorCode" class="form-control" placeholder="#FF5733" />
+                        <span asp-validation-for="ColorCode" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <input asp-for="IsPaidLeave" /> @Html.DisplayNameFor(model => model.IsPaidLeave)
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <input asp-for="IsCarryForwardAllowed" /> @Html.DisplayNameFor(model => model.IsCarryForwardAllowed)
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <input asp-for="RequiresApproval" /> @Html.DisplayNameFor(model => model.RequiresApproval)
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <input asp-for="RequiresDocument" /> @Html.DisplayNameFor(model => model.RequiresDocument)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="MaxCarryForwardDays" class="control-label">Max Carry Forward Days</label>
+                        <input asp-for="MaxCarryForwardDays" class="form-control" type="number" min="0" />
+                        <span asp-validation-for="MaxCarryForwardDays" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="MaxAccumulationDays" class="control-label">Max Accumulation Days</label>
+                        <input asp-for="MaxAccumulationDays" class="form-control" type="number" min="0" />
+                        <span asp-validation-for="MaxAccumulationDays" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">
+                    <input asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save
+            </button>
+            <a asp-action="Index" class="btn btn-secondary float-right">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,211 @@
+@model HRPayroll.Domain.Entities.HR.Employee
+@{
+    ViewData["Title"] = "Add New Employee";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Employee Information</h3>
+            </div>
+            <form asp-action="Create">
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h5><i class="icon fas fa-ban"></i> Error!</h5>
+                            @TempData["Error"]
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="FirstName">First Name *</label>
+                                <input asp-for="FirstName" class="form-control" required>
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="LastName">Last Name *</label>
+                                <input asp-for="LastName" class="form-control" required>
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Email">Email *</label>
+                                <input asp-for="Email" class="form-control" type="email" required>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Phone">Phone</label>
+                                <input asp-for="Phone" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DateOfBirth">Date of Birth</label>
+                                <input asp-for="DateOfBirth" class="form-control" type="date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Gender">Gender</label>
+                                <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<HRPayroll.Domain.Enums.Gender>()">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="NationalId">National ID</label>
+                                <input asp-for="NationalId" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="TinNo">TIN Number</label>
+                                <input asp-for="TinNo" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="PresentAddress">Present Address</label>
+                                <textarea asp-for="PresentAddress" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="PermanentAddress">Permanent Address</label>
+                                <textarea asp-for="PermanentAddress" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <h5>Employment Information</h5>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DepartmentId">Department *</label>
+                                <select asp-for="DepartmentId" class="form-control" asp-items="@(ViewBag.Departments as SelectList)" required>
+                                    <option value="">-- Select Department --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DesignationId">Designation *</label>
+                                <select asp-for="DesignationId" class="form-control" asp-items="@(ViewBag.Designations as SelectList)" required>
+                                    <option value="">-- Select Designation --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="ShiftId">Shift</label>
+                                <select asp-for="ShiftId" class="form-control" asp-items="@(ViewBag.Shifts as SelectList)">
+                                    <option value="">-- Select Shift --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="EmploymentType">Employment Type</label>
+                                <select asp-for="EmploymentType" class="form-control" asp-items="Html.GetEnumSelectList<HRPayroll.Domain.Enums.EmploymentType>()">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DateOfJoining">Date of Joining *</label>
+                                <input asp-for="DateOfJoining" class="form-control" type="date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DateOfConfirmation">Date of Confirmation</label>
+                                <input asp-for="DateOfConfirmation" class="form-control" type="date">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <h5>Bank Information</h5>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="BankAccountNo">Bank Account Number</label>
+                                <input asp-for="BankAccountNo" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="BankName">Bank Name</label>
+                                <input asp-for="BankName" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="BranchName">Branch Name</label>
+                                <input asp-for="BranchName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-check mt-4">
+                                    <input asp-for="IsTaxExempted" class="form-check-input">
+                                    <label asp-for="IsTaxExempted" class="form-check-label">Tax Exempted</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Employee
+                    </button>
+                    <a asp-action="Index" class="btn btn-default float-right">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
