@@ -1,10 +1,12 @@
 using HRPayroll.Domain.Entities.Payroll;
 using HRPayroll.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HRPayroll.Web.Controllers;
 
+[Authorize]
 public class SalaryStructureController : Controller
 {
     private readonly ISalaryStructureService _salaryStructureService;

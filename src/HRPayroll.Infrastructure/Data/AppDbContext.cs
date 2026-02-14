@@ -1,11 +1,13 @@
 using HRPayroll.Domain.Entities;
 using HRPayroll.Domain.Entities.HR;
 using HRPayroll.Domain.Entities.Payroll;
+using HRPayroll.Domain.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HRPayroll.Infrastructure.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, long>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

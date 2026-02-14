@@ -1,0 +1,33 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="error-page">
+    <h2 class="headline text-danger">403</h2>
+    <div class="error-content">
+        <h3><i class="fas fa-exclamation-triangle text-danger"></i> Oops! Access Denied.</h3>
+        <p>
+            You do not have permission to access this page.
+            Please contact your administrator if you believe this is an error.
+        </p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Go to Dashboard</a>
+        <a asp-controller="Account" asp-action="Logout" class="btn btn-secondary">Logout</a>
+    </div>
+</div>
+
+<style>
+    .error-page {
+        width: 600px;
+        margin: 20px auto 0;
+        padding: 0 15px;
+    }
+    .error-page > .headline {
+        font-size: 100px;
+        font-weight: 300;
+    }
+    .error-content {
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>

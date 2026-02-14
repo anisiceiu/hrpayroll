@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using HRPayroll.Domain.Interfaces;
@@ -5,6 +6,7 @@ using HRPayroll.Domain.Entities.HR;
 
 namespace HRPayroll.Web.Controllers;
 
+[Authorize]
 public class ShiftController : Controller
 {
     private readonly IShiftService _shiftService;

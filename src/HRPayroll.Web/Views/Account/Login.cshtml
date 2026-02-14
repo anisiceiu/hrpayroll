@@ -1,0 +1,93 @@
+@model HRPayroll.Web.Models.LoginViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-box">
+    <div class="login-logo">
+        <a href="/"><b>HR & Payroll</b> System</a>
+    </div>
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">Sign in to start your session</p>
+            
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="Password" class="form-control" placeholder="Password" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+                
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input asp-for="RememberMe" type="checkbox" id="remember" />
+                            <label for="remember">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="social-auth-links text-center mb-3">
+                <p>- OR -</p>
+                <a asp-action="Register" class="btn btn-block btn-success">
+                    <i class="fas fa-user-plus mr-2"></i> Register a new account
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-page {
+        background-color: #f4f6f9;
+    }
+    .login-box {
+        width: 360px;
+        margin: 7% auto;
+    }
+    .login-logo {
+        font-size: 35px;
+        font-weight: 300;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    .login-logo a {
+        color: #17a2b8;
+    }
+    .login-card-body {
+        background: #fff;
+        border-top: 0;
+        padding: 20px;
+    }
+    .login-box-msg {
+        margin: 0;
+        text-align: center;
+        padding: 0 20px 20px 20px;
+    }
+    .social-auth-links {
+        padding: 0 10px;
+    }
+</style>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using HRPayroll.Domain.Entities.HR;
@@ -5,6 +6,7 @@ using HRPayroll.Domain.Interfaces;
 
 namespace HRPayroll.Web.Controllers;
 
+[Authorize]
 public class DocumentController : Controller
 {
     private readonly IDocumentService _documentService;

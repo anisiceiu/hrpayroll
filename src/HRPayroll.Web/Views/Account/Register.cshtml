@@ -1,0 +1,118 @@
+@model HRPayroll.Web.Models.RegisterViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Register";
+}
+
+<div class="register-box">
+    <div class="login-logo">
+        <a href="/"><b>HR & Payroll</b> System</a>
+    </div>
+    <div class="card">
+        <div class="card-body register-card-body">
+            <p class="login-box-msg">Register a new account</p>
+            
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="UserName" class="form-control" placeholder="Username" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user-tag"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+                
+                <div class="input-group mb-3">
+                    <select asp-for="Role" class="form-control">
+                        <option value="">Select Role</option>
+                        @foreach (var role in (List<HRPayroll.Web.Controllers.RoleItem>)ViewBag.Roles)
+                        {
+                            <option value="@role.Role">@role.DisplayName</option>
+                        }
+                    </select>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user-cog"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Role" class="text-danger"></span>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="Password" class="form-control" placeholder="Password" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+                
+                <div class="input-group mb-3">
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="text-center mt-2">
+                <a asp-action="Login" class="text-center">I already have an account</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .register-box {
+        width: 500px;
+        margin: 7% auto;
+    }
+    .register-card-body {
+        background: #fff;
+        border-top: 0;
+        padding: 20px;
+    }
+</style>

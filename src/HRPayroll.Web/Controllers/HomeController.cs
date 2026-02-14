@@ -2,10 +2,12 @@ using HRPayroll.Application.Services;
 using HRPayroll.Domain.Entities.HR;
 using HRPayroll.Domain.Interfaces;
 using HRPayroll.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRPayroll.Web.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

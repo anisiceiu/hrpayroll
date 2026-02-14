@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HRPayroll.Domain.Interfaces;
 using HRPayroll.Domain.Entities.HR;
 
 namespace HRPayroll.Web.Controllers;
 
+[Authorize]
 public class DepartmentController : Controller
 {
     private readonly IDepartmentService _departmentService;
