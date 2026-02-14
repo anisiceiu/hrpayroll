@@ -1,0 +1,119 @@
+@model HRPayroll.Domain.Entities.HR.EmployeeShift
+@{
+    ViewData["Title"] = "Employee Shift Details";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Employee Shift Details</h3>
+                <div class="card-tools">
+                    <a asp-action="EditEmployeeShift" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-action="EmployeeShiftList" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        Employee
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Employee?.FullName
+                    </dd>
+                    <dt class="col-sm-4">
+                        Department
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Employee?.Department?.Name
+                    </dd>
+                    <dt class="col-sm-4">
+                        Shift
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Shift?.Name (@Model.Shift?.Code)
+                    </dd>
+                    <dt class="col-sm-4">
+                        Shift Time
+                    </dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Shift != null)
+                        {
+                            <span>@Model.Shift.StartTime.Hours:@Model.Shift.StartTime.Minutes.ToString("D2")</span>
+                            <span>-</span>
+                                    <span>
+    @Model.Shift.EndTime.Hours:@Model.Shift.EndTime.Minutes.ToString("D2")</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">
+                        Break Time
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Shift?.BreakTimeMinutes minutes
+                    </dd>
+                    <dt class="col-sm-4">
+                        Grace Time
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Shift?.GraceTimeMinutes minutes
+                    </dd>
+                    <dt class="col-sm-4">
+                        Working Hours
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.Shift?.WorkingHours hours
+                    </dd>
+                    <dt class="col-sm-4">
+                        Effective From
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Model.EffectiveFrom.ToString("dd MMMM yyyy")
+                    </dd>
+                    <dt class="col-sm-4">
+                        Effective To
+                    </dt>
+                    <dd class="col-sm-8">
+                        @if (Model.EffectiveTo.HasValue)
+                        {
+                            @Model.EffectiveTo.Value.ToString("dd MMMM yyyy")
+                        }
+                        else
+                        {
+                            <span class="text-muted">Ongoing</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">
+                        Status
+                    </dt>
+                    <dd class="col-sm-8">
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactive</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">
+                        Notes
+                    </dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            @Model.Notes
+                        }
+                        else
+                        {
+                            <span class="text-muted">No notes</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

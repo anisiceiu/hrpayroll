@@ -17,6 +17,10 @@ public interface IEmployeeService
     Task<int> GetActiveCountAsync();
     Task<IEnumerable<Entities.HR.Employee>> GetByDepartmentIdAsync(long departmentId);
     Task<IEnumerable<Entities.HR.Employee>> GetActiveEmployeesAsync();
+    // New methods with navigation properties populated
+    Task<IEnumerable<Entities.HR.Employee>> GetAllEmployeesWithIncludesAsync();
+    Task<Entities.HR.Employee?> GetEmployeeByIdWithIncludesAsync(long id);
+    Task<IEnumerable<Entities.HR.Employee>> GetActiveEmployeesWithIncludesAsync();
 }
 
 /// <summary>
@@ -57,6 +61,26 @@ public interface IShiftService
     Task<Entities.HR.Shift> UpdateShiftAsync(Entities.HR.Shift shift);
     Task<bool> DeleteShiftAsync(long id);
     Task<IEnumerable<Entities.HR.Shift>> GetActiveShiftsAsync();
+    // New methods with navigation properties populated
+    Task<IEnumerable<Entities.HR.Shift>> GetAllShiftsWithIncludesAsync();
+    Task<Entities.HR.Shift?> GetShiftByIdWithIncludesAsync(long id);
+    Task<IEnumerable<Entities.HR.Shift>> GetActiveShiftsWithIncludesAsync();
+}
+
+/// <summary>
+/// EmployeeShift service interface
+/// </summary>
+public interface IEmployeeShiftService
+{
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetAllEmployeeShiftsAsync();
+    Task<Entities.HR.EmployeeShift?> GetEmployeeShiftByIdAsync(long id);
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetByEmployeeIdAsync(long employeeId);
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetByShiftIdAsync(long shiftId);
+    Task<Entities.HR.EmployeeShift?> GetCurrentAssignmentAsync(long employeeId);
+    Task<Entities.HR.EmployeeShift> AssignShiftAsync(Entities.HR.EmployeeShift employeeShift);
+    Task<Entities.HR.EmployeeShift> UpdateEmployeeShiftAsync(Entities.HR.EmployeeShift employeeShift);
+    Task<bool> RemoveAssignmentAsync(long id);
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetActiveAssignmentsAsync();
 }
 
 /// <summary>
@@ -140,6 +164,8 @@ public interface IPayrollService
     Task<decimal> GetCurrentMonthCostAsync();
     Task<Dictionary<long, decimal>> GetCostByDepartmentAsync();
     Task<PayslipDto?> GetPayrollDetailByEmployeeAndMonthAsync(long employeeId, int month, int year);
+    // New method to submit for approval
+    Task<bool> SubmitForApprovalAsync(long payrollRunId);
 }
 
 /// <summary>
@@ -191,6 +217,11 @@ public interface ISalaryStructureService
     Task<Entities.Payroll.SalaryStructure> UpdateSalaryStructureAsync(Entities.Payroll.SalaryStructure salaryStructure);
     Task<bool> DeleteSalaryStructureAsync(long id);
     Task<IEnumerable<Entities.Payroll.SalaryStructure>> GetActiveStructuresAsync();
+    // New methods with navigation properties populated
+    Task<IEnumerable<Entities.Payroll.SalaryStructure>> GetAllSalaryStructuresWithIncludesAsync();
+    Task<Entities.Payroll.SalaryStructure?> GetSalaryStructureByIdWithIncludesAsync(long id);
+    Task<Entities.Payroll.SalaryStructure?> GetByEmployeeIdWithIncludesAsync(long employeeId);
+    Task<IEnumerable<Entities.Payroll.SalaryStructure>> GetActiveStructuresWithIncludesAsync();
 }
 
 /// <summary>

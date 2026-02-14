@@ -1,19 +1,16 @@
-@model IEnumerable<HRPayroll.Domain.Entities.HR.Shift>
+@model IEnumerable<HRPayroll.Domain.Entities.HR.EmployeeShift>
 @{
-    ViewData["Title"] = "Shifts";
+    ViewData["Title"] = "Employee Shift Assignments";
 }
 
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Shifts List</h3>
+                <h3 class="card-title">Employee Shift Assignments</h3>
                 <div class="card-tools">
-                    <a asp-action="Create" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Add New Shift
-                    </a>
-                    <a asp-action="EmployeeShiftList" class="btn btn-info btn-sm">
-                        <i class="fas fa-users"></i> Employee Assignments
+                    <a asp-action="AssignShift" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Assign Shift
                     </a>
                 </div>
             </div>
@@ -35,14 +32,15 @@
                     </div>
                 }
 
-                <table id="shiftsTable" class="table table-bordered table-striped">
+                <table id="employeeShiftTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Grace Time</th>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Shift</th>
+                            <th>Shift Time</th>
+                            <th>Effective From</th>
+                            <th>Effective To</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -51,11 +49,28 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Name</td>
-                                <td>@item.Code</td>
-                                <td>@item.StartTime.Hours:@item.StartTime.Minutes.ToString("D2")</td>
-                                <td>@item.EndTime.Hours:@item.EndTime.Minutes.ToString("D2")</td>
-                                <td>@item.GraceTimeMinutes min</td>
+                                <td>@item.Employee?.FullName</td>
+                                <td>@item.Employee?.Department?.Name</td>
+                                <td>@item.Shift?.Name (@item.Shift?.Code)</td>
+                                <td>
+                                    @if (item.Shift != null)
+                                    {
+                                        <span>@item.Shift.StartTime.Hours:@item.Shift.StartTime.Minutes.ToString("D2")</span>
+                                        <span>-</span>
+                                        <span>@item.Shift.EndTime.Hours:@item.Shift.EndTime.Minutes.ToString("D2") </span>
+                                    }
+                                </td>
+                                <td>@item.EffectiveFrom.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    @if (item.EffectiveTo.HasValue)
+                                    {
+                                        @item.EffectiveTo.Value.ToString("dd MMM yyyy")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Ongoing</span>
+                                    }
+                                </td>
                                 <td>
                                     @if (item.IsActive)
                                     {
@@ -67,19 +82,13 @@
                                     }
                                 </td>
                                 <td>
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
-                                        <i class="fas fa-eye"></i> View
-                                    </a>
-                                    <a asp-action="ShiftEmployees" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-users"></i> Employees
-                                    </a>
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                                    <a asp-action="EditEmployeeShift" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;">
+                                    <form asp-action="RemoveEmployeeShift" asp-route-id="@item.Id" method="post" style="display: inline;">
                                         @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this shift?');">
-                                            <i class="fas fa-trash"></i> Delete
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this shift assignment?');">
+                                            <i class="fas fa-trash"></i> Remove
                                         </button>
                                     </form>
                                 </td>
@@ -95,7 +104,7 @@
 @section Scripts {
     <script>
         $(function () {
-            $('#shiftsTable').DataTable({
+            $('#employeeShiftTable').DataTable({
                 "paging": true,
                 "lengthChange": false,
                 "searching": true,
@@ -104,7 +113,7 @@
                 "autoWidth": false,
                 "responsive": true,
                 "language": {
-                    "emptyTable": "No shifts found"
+                    "emptyTable": "No employee shift assignments found"
                 }
             });
         });

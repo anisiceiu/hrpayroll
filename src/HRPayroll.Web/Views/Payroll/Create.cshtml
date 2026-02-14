@@ -19,6 +19,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
                 <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter any name"/>
+                </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="Month">Month</label>
                         <select asp-for="Month" class="form-control" asp-items="ViewBag.MonthList">

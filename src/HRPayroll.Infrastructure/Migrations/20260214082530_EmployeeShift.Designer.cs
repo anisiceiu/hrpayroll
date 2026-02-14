@@ -4,6 +4,7 @@ using HRPayroll.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRPayroll.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260214082530_EmployeeShift")]
+    partial class EmployeeShift
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1889,6 +1892,9 @@ namespace HRPayroll.Infrastructure.Migrations
                     b.Property<long>("EmployeeId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("EmployeeId1")
+                        .HasColumnType("bigint");
+
                     b.Property<decimal>("GrossSalary")
                         .HasColumnType("decimal(18,2)");
 
@@ -1943,8 +1949,11 @@ namespace HRPayroll.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("EmployeeId1")
+                        .IsUnique()
+                        .HasFilter("[EmployeeId1] IS NOT NULL");
 
                     b.ToTable("SalaryStructures");
                 });
@@ -2526,10 +2535,14 @@ namespace HRPayroll.Infrastructure.Migrations
             modelBuilder.Entity("HRPayroll.Domain.Entities.Payroll.SalaryStructure", b =>
                 {
                     b.HasOne("HRPayroll.Domain.Entities.HR.Employee", "Employee")
-                        .WithOne("SalaryStructure")
-                        .HasForeignKey("HRPayroll.Domain.Entities.Payroll.SalaryStructure", "EmployeeId")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("HRPayroll.Domain.Entities.HR.Employee", null)
+                        .WithOne("SalaryStructure")
+                        .HasForeignKey("HRPayroll.Domain.Entities.Payroll.SalaryStructure", "EmployeeId1");
 
                     b.Navigation("Employee");
                 });

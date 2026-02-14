@@ -15,6 +15,23 @@
         </div>
     </div>
     <div class="card-body">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fas fa-check"></i> Success!</h5>
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fas fa-ban"></i> Error!</h5>
+                @TempData["Error"]
+            </div>
+        }
+
         <table id="payrollTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -99,6 +116,12 @@
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                <form asp-action="SubmitForApprovalConfirmed" asp-route-id="@item.Id" method="post" style="display: inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to submit this payroll for approval?');">
+                                        <i class="fas fa-paper-plane"></i> Submit
+                                    </button>
+                                </form>
                             }
                             @if (item.Status == HRPayroll.Domain.Enums.PayrollRunStatus.PendingApproval)
                             {

@@ -1,0 +1,99 @@
+@model HRPayroll.Domain.Entities.HR.EmployeeShift
+@{
+    ViewData["Title"] = "Assign Shift";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Assign Shift to Employee</h3>
+            </div>
+            <div class="card-body">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h5><i class="icon fas fa-check"></i> Success!</h5>
+                        @TempData["Success"]
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h5><i class="icon fas fa-ban"></i> Error!</h5>
+                        @TempData["Error"]
+                    </div>
+                }
+
+                <form asp-action="AssignShift" method="post">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="form-group">
+                        <label asp-for="EmployeeId" class="control-label">Employee</label>
+                        <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.Employees">
+                            <option value="">-- Select Employee --</option>
+                        </select>
+                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ShiftId" class="control-label">Shift</label>
+                        <select asp-for="ShiftId" class="form-control" asp-items="ViewBag.Shifts">
+                            <option value="">-- Select Shift --</option>
+                        </select>
+                        <span asp-validation-for="ShiftId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="EffectiveFrom" class="control-label">Effective From</label>
+                        <input asp-for="EffectiveFrom" type="date" class="form-control" />
+                        <span asp-validation-for="EffectiveFrom" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="EffectiveTo" class="control-label">Effective To (Optional)</label>
+                        <input asp-for="EffectiveTo" type="date" class="form-control" />
+                        <span asp-validation-for="EffectiveTo" class="text-danger"></span>
+                        <small class="form-text text-muted">Leave empty for ongoing assignments</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Notes" class="control-label">Notes (Optional)</label>
+                        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input asp-for="IsActive" type="checkbox" class="custom-control-input" id="IsActive" checked />
+                            <label class="custom-control-label" for="IsActive">Active Assignment</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Assign Shift
+                        </button>
+                        <a asp-action="EmployeeShiftList" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function () {
+            // Set default effective from date to today
+            if (!$('#EffectiveFrom').val()) {
+                $('#EffectiveFrom').val(new Date().toISOString().split('T')[0]);
+            }
+        });
+    </script>
+}

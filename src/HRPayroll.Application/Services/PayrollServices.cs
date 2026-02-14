@@ -270,6 +270,19 @@ public class PayrollService : IPayrollService
             payrollRun.RunCode = $"PR-{payrollRun.Year}-{payrollRun.Month:D2}-{(existing.Id + 1):D3}";
         }
 
+        // Get eligible employees (active employees with salary structure)
+        var employees = await _employeeRepository.GetActiveEmployeesWithSalaryStructureAsync();
+        var eligibleEmployees = employees.ToList();
+
+        // Calculate totals automatically
+        payrollRun.TotalEmployees = eligibleEmployees.Count;
+        payrollRun.TotalGrossSalary = eligibleEmployees
+            .Sum(e => e.SalaryStructure?.GrossSalary ?? 0);
+        payrollRun.TotalNetSalary = eligibleEmployees
+            .Sum(e => e.SalaryStructure?.NetSalary ?? 0);
+        payrollRun.TotalDeductions = eligibleEmployees
+            .Sum(e => e.SalaryStructure?.TotalDeductions ?? 0);
+
         payrollRun.Status = PayrollRunStatus.Draft;
         return await _payrollRunRepository.AddAsync(payrollRun);
     }
@@ -290,6 +303,29 @@ public class PayrollService : IPayrollService
         existing.Notes = payrollRun.Notes;
 
         return await _payrollRunRepository.UpdateAsync(existing);
+    }
+
+    /// <summary>
+    /// Submit payroll run for approval (Draft -> PendingApproval)
+    /// </summary>
+    public async Task<bool> SubmitForApprovalAsync(long payrollRunId)
+    {
+        var payrollRun = await _payrollRunRepository.GetByIdAsync(payrollRunId);
+        if (payrollRun == null)
+        {
+            throw new Exception("Payroll run not found.");
+        }
+
+        if (payrollRun.Status != PayrollRunStatus.Draft)
+        {
+            throw new Exception("Only draft payroll runs can be submitted for approval.");
+        }
+
+        payrollRun.Status = PayrollRunStatus.PendingApproval;
+        //payrollRun.SubmittedDate = DateTime.Now;
+
+        await _payrollRunRepository.UpdateAsync(payrollRun);
+        return true;
     }
 
     public async Task<bool> ApprovePayrollRunAsync(long payrollRunId, long approverId)

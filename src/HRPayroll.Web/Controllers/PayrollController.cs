@@ -21,6 +21,10 @@ namespace HRPayroll.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var payrollRuns = await _payrollService.GetAllPayrollRunsAsync();
+            if (TempData["Success"] == null && TempData["Error"] == null)
+            {
+                // Only show temp data messages
+            }
             return View(payrollRuns.OrderByDescending(p => p.Year).ThenByDescending(p => p.Month));
         }
 
@@ -101,6 +105,39 @@ namespace HRPayroll.Web.Controllers
                 });
             }
             return View(payrollRun);
+        }
+
+        // GET: Payroll/SubmitForApproval/5
+        public async Task<IActionResult> SubmitForApproval(long id)
+        {
+            var payrollRun = await _payrollService.GetPayrollRunByIdAsync(id);
+            if (payrollRun == null)
+            {
+                return NotFound();
+            }
+            if (payrollRun.Status != HRPayroll.Domain.Enums.PayrollRunStatus.Draft)
+            {
+                return BadRequest("Only draft payroll runs can be submitted for approval.");
+            }
+            return View(payrollRun);
+        }
+
+        // POST: Payroll/SubmitForApproval/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitForApprovalConfirmed(long id)
+        {
+            try
+            {
+                await _payrollService.SubmitForApprovalAsync(id);
+                TempData["Success"] = "Payroll submitted for approval successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // GET: Payroll/Edit/5

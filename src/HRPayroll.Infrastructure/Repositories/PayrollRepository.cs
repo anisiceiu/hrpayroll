@@ -15,6 +15,42 @@ public class SalaryStructureRepository : Repository<SalaryStructure>, ISalaryStr
     {
     }
 
+    /// <summary>
+    /// Get all salary structures with navigation properties (Employee and Components)
+    /// </summary>
+    public async Task<IEnumerable<SalaryStructure>> GetAllWithIncludesAsync()
+    {
+        return await _dbSet
+            .Include(s => s.Employee)
+                .ThenInclude(e => e!.Department)
+            .Include(s => s.Components)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Get salary structure by ID with navigation properties
+    /// </summary>
+    public async Task<SalaryStructure?> GetByIdWithIncludesAsync(long id)
+    {
+        return await _dbSet
+            .Include(s => s.Employee)
+                .ThenInclude(e => e!.Department)
+            .Include(s => s.Components)
+            .FirstOrDefaultAsync(s => s.Id == id);
+    }
+
+    /// <summary>
+    /// Get salary structure by employee ID with navigation properties
+    /// </summary>
+    public async Task<SalaryStructure?> GetByEmployeeIdWithIncludesAsync(long employeeId)
+    {
+        return await _dbSet
+            .Include(s => s.Employee)
+                .ThenInclude(e => e!.Department)
+            .Include(s => s.Components)
+            .FirstOrDefaultAsync(s => s.EmployeeId == employeeId);
+    }
+
     public async Task<SalaryStructure?> GetByCodeAsync(string code)
     {
         return await _dbSet.FirstOrDefaultAsync(s => s.Name == code);
@@ -29,6 +65,19 @@ public class SalaryStructureRepository : Repository<SalaryStructure>, ISalaryStr
     {
         return await _dbSet.Where(s => s.IsActive).ToListAsync();
     }
+
+    /// <summary>
+    /// Get active salary structures with navigation properties
+    /// </summary>
+    public async Task<IEnumerable<SalaryStructure>> GetActiveStructuresWithIncludesAsync()
+    {
+        return await _dbSet
+            .Where(s => s.IsActive)
+            .Include(s => s.Employee)
+                .ThenInclude(e => e!.Department)
+            .Include(s => s.Components)
+            .ToListAsync();
+    }
 }
 
 /// <summary>
@@ -40,9 +89,32 @@ public class SalaryComponentRepository : Repository<SalaryComponent>, ISalaryCom
     {
     }
 
+    /// <summary>
+    /// Get all salary components with navigation properties
+    /// </summary>
+    public async Task<IEnumerable<SalaryComponent>> GetAllWithIncludesAsync()
+    {
+        return await _dbSet
+            .Include(sc => sc.SalaryStructure)
+                .ThenInclude(ss => ss!.Employee)
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<SalaryComponent>> GetByStructureIdAsync(long structureId)
     {
         return await _dbSet.Where(sc => sc.SalaryStructureId == structureId).ToListAsync();
+    }
+
+    /// <summary>
+    /// Get salary components by structure ID with navigation properties
+    /// </summary>
+    public async Task<IEnumerable<SalaryComponent>> GetByStructureIdWithIncludesAsync(long structureId)
+    {
+        return await _dbSet
+            .Where(sc => sc.SalaryStructureId == structureId)
+            .Include(sc => sc.SalaryStructure)
+                .ThenInclude(ss => ss!.Employee)
+            .ToListAsync();
     }
 }
 

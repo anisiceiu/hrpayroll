@@ -13,6 +13,7 @@ public static class ServiceExtensions
         services.AddScoped<IDepartmentService, DepartmentService>();
         services.AddScoped<IDesignationService, DesignationService>();
         services.AddScoped<IShiftService, ShiftService>();
+        services.AddScoped<IEmployeeShiftService, EmployeeShiftService>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<ILeaveService, LeaveService>();
         services.AddScoped<ILeaveTypeService, LeaveTypeService>();

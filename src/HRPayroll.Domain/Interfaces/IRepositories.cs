@@ -1,4 +1,5 @@
 using HRPayroll.Domain.Common;
+using HRPayroll.Domain.Entities.HR;
 
 namespace HRPayroll.Domain.Interfaces;
 
@@ -26,6 +27,10 @@ public interface IEmployeeRepository : IRepository<Entities.HR.Employee>
     Task<IEnumerable<Entities.HR.Employee>> GetByDepartmentIdAsync(long departmentId);
     Task<IEnumerable<Entities.HR.Employee>> GetByStatusAsync(Enums.EmployeeStatus status);
     Task<IEnumerable<Entities.HR.Employee>> GetActiveEmployeesAsync();
+    Task<IEnumerable<Entities.HR.Employee>> GetAllWithIncludesAsync();
+    Task<Entities.HR.Employee?> GetByIdWithIncludesAsync(long id);
+    Task<IEnumerable<Entities.HR.Employee>> GetActiveEmployeesWithIncludesAsync();
+    Task<IEnumerable<Entities.HR.Employee>> GetActiveEmployeesWithSalaryStructureAsync();
     Task<int> GetTotalCountAsync();
     Task<int> GetActiveCountAsync();
 }
@@ -38,6 +43,7 @@ public interface IDepartmentRepository : IRepository<Entities.HR.Department>
     Task<Entities.HR.Department?> GetByCodeAsync(string code);
     Task<IEnumerable<Entities.HR.Department>> GetActiveDepartmentsAsync();
     Task<IEnumerable<Entities.HR.Department>> GetSubDepartmentsAsync(long parentId);
+    Task<IEnumerable<Entities.HR.Department>> GetAllWithIncludesAsync();
 }
 
 /// <summary>
@@ -48,6 +54,7 @@ public interface IDesignationRepository : IRepository<Entities.HR.Designation>
     Task<Entities.HR.Designation?> GetByCodeAsync(string code);
     Task<IEnumerable<Entities.HR.Designation>> GetByDepartmentIdAsync(long departmentId);
     Task<IEnumerable<Entities.HR.Designation>> GetActiveDesignationsAsync();
+    Task<IEnumerable<Entities.HR.Designation>> GetAllWithIncludesAsync();
 }
 
 /// <summary>
@@ -57,6 +64,25 @@ public interface IShiftRepository : IRepository<Entities.HR.Shift>
 {
     Task<Entities.HR.Shift?> GetByCodeAsync(string code);
     Task<IEnumerable<Entities.HR.Shift>> GetActiveShiftsAsync();
+    // New methods with navigation properties populated
+    Task<IEnumerable<Entities.HR.Shift>> GetAllWithIncludesAsync();
+    Task<Entities.HR.Shift?> GetByIdWithIncludesAsync(long id);
+    Task<IEnumerable<Entities.HR.Shift>> GetActiveShiftsWithIncludesAsync();
+}
+
+/// <summary>
+/// EmployeeShift repository interface
+/// </summary>
+public interface IEmployeeShiftRepository : IRepository<Entities.HR.EmployeeShift>
+{
+    Task<EmployeeShift?> GetCurrentAssignmentWithIncludesAsync(long employeeId);
+    Task<IEnumerable<EmployeeShift>> GetByEmployeeIdWithIncludesAsync(long employeeId);
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetAllWithIncludesAsync();
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetByEmployeeIdAsync(long employeeId);
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetByShiftIdAsync(long shiftId);
+    Task<Entities.HR.EmployeeShift?> GetCurrentAssignmentAsync(long employeeId);
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetActiveAssignmentsAsync();
+    Task<IEnumerable<Entities.HR.EmployeeShift>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
 }
 
 /// <summary>
@@ -130,6 +156,11 @@ public interface ISalaryStructureRepository : IRepository<Entities.Payroll.Salar
     Task<Entities.Payroll.SalaryStructure?> GetByCodeAsync(string code);
     Task<Entities.Payroll.SalaryStructure?> GetByEmployeeIdAsync(long employeeId);
     Task<IEnumerable<Entities.Payroll.SalaryStructure>> GetActiveStructuresAsync();
+    // New methods with navigation properties populated
+    Task<IEnumerable<Entities.Payroll.SalaryStructure>> GetAllWithIncludesAsync();
+    Task<Entities.Payroll.SalaryStructure?> GetByIdWithIncludesAsync(long id);
+    Task<Entities.Payroll.SalaryStructure?> GetByEmployeeIdWithIncludesAsync(long employeeId);
+    Task<IEnumerable<Entities.Payroll.SalaryStructure>> GetActiveStructuresWithIncludesAsync();
 }
 
 /// <summary>
@@ -138,6 +169,9 @@ public interface ISalaryStructureRepository : IRepository<Entities.Payroll.Salar
 public interface ISalaryComponentRepository : IRepository<Entities.Payroll.SalaryComponent>
 {
     Task<IEnumerable<Entities.Payroll.SalaryComponent>> GetByStructureIdAsync(long structureId);
+    // New methods with navigation properties populated
+    Task<IEnumerable<Entities.Payroll.SalaryComponent>> GetAllWithIncludesAsync();
+    Task<IEnumerable<Entities.Payroll.SalaryComponent>> GetByStructureIdWithIncludesAsync(long structureId);
 }
 
 /// <summary>

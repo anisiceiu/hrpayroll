@@ -21,18 +21,16 @@ public class SalaryStructureController : Controller
     // GET: SalaryStructure
     public async Task<IActionResult> Index()
     {
-        var salaryStructures = await _salaryStructureService.GetAllSalaryStructuresAsync();
+        // Use GetAllSalaryStructuresWithIncludesAsync to populate navigation properties
+        var salaryStructures = await _salaryStructureService.GetAllSalaryStructuresWithIncludesAsync();
         return View(salaryStructures);
     }
 
     // GET: SalaryStructure/Details/5
     public async Task<IActionResult> Details(long id)
     {
-        var salaryStructure = await _salaryStructureService.GetSalaryStructureByIdAsync(id);
-        if (salaryStructure is not null)
-        {
-            salaryStructure.Employee = await _employeeRepository.GetByIdAsync(salaryStructure.EmployeeId);
-        }
+        // Use GetSalaryStructureByIdWithIncludesAsync to populate navigation properties
+        var salaryStructure = await _salaryStructureService.GetSalaryStructureByIdWithIncludesAsync(id);
         if (salaryStructure == null)
         {
             return NotFound();
@@ -73,7 +71,8 @@ public class SalaryStructureController : Controller
     // GET: SalaryStructure/Edit/5
     public async Task<IActionResult> Edit(long id)
     {
-        var salaryStructure = await _salaryStructureService.GetSalaryStructureByIdAsync(id);
+        // Use GetSalaryStructureByIdWithIncludesAsync to populate navigation properties
+        var salaryStructure = await _salaryStructureService.GetSalaryStructureByIdWithIncludesAsync(id);
         if (salaryStructure == null)
         {
             return NotFound();
@@ -140,7 +139,8 @@ public class SalaryStructureController : Controller
     // GET: SalaryStructure/ByEmployee/5
     public async Task<IActionResult> ByEmployee(long employeeId)
     {
-        var salaryStructure = await _salaryStructureService.GetByEmployeeIdAsync(employeeId);
+        // Use GetByEmployeeIdWithIncludesAsync to populate navigation properties
+        var salaryStructure = await _salaryStructureService.GetByEmployeeIdWithIncludesAsync(employeeId);
         if (salaryStructure == null)
         {
             return NotFound();

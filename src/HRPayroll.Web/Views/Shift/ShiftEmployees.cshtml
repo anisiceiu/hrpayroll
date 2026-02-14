@@ -1,0 +1,95 @@
+@model HRPayroll.Domain.Entities.HR.Shift
+@{
+    ViewData["Title"] = $"Employees in {Model.Name}";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Employees in @Model.Name</h3>
+                <div class="card-tools">
+                    <a asp-action="AssignShift" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Assign Employee
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back to Shifts
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="callout callout-info">
+                    <h5>Shift Details</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-auto">Code:</dt>
+                        <dd class="col-auto">@Model.Code</dd>
+                        <dt class="col-auto">Time:</dt>
+                        <dd class="col-auto">@Model.StartTime.Hours:@Model.StartTime.Minutes.ToString("D2") - @Model.EndTime.Hours:@Model.EndTime.Minutes.ToString("D2")</dd>
+                        <dt class="col-auto">Working Hours:</dt>
+                        <dd class="col-auto">@Model.WorkingHours hrs</dd>
+                        <dt class="col-auto">Break:</dt>
+                        <dd class="col-auto">@Model.BreakTimeMinutes min</dd>
+                    </dl>
+                </div>
+
+                <h4 class="mt-4">Assigned Employees</h4>
+                @if (ViewBag.AssignedEmployees != null && ViewBag.AssignedEmployees.Any())
+                {
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>Effective From</th>
+                                <th>Effective To</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.AssignedEmployees)
+                            {
+                                <tr>
+                                    <td>@item.Employee?.FullName</td>
+                                    <td>@item.Employee?.Department?.Name</td>
+                                    <td>@item.EffectiveFrom.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        @if (item.EffectiveTo.HasValue)
+                                        {
+                                            @item.EffectiveTo.Value.ToString("dd MMM yyyy")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Ongoing</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="EditEmployeeShift" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        No employees are currently assigned to this shift.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -183,10 +183,19 @@ public class ShiftService : IShiftService
             throw new Exception("A shift with this code already exists.");
         }
 
+        // Calculate if overnight shift (end time < start time)
+        shift.IsOvernight = shift.EndTime < shift.StartTime;
+
         // Calculate working hours
         var breakTimeHours = shift.BreakTimeMinutes / 60.0m;
         var totalHours = (shift.EndTime - shift.StartTime).TotalHours;
-        if (totalHours < 0) totalHours += 24; // Handle night shift
+        
+        if (totalHours < 0) 
+        {
+            totalHours += 24; // Handle overnight shift
+            shift.IsOvernight = true;
+        }
+        
         shift.WorkingHours = Math.Round((decimal)totalHours - breakTimeHours, 2);
 
         shift.IsActive = true;
@@ -206,9 +215,13 @@ public class ShiftService : IShiftService
         existing.StartTime = shift.StartTime;
         existing.EndTime = shift.EndTime;
         existing.BreakTimeMinutes = shift.BreakTimeMinutes;
+        existing.MinimumWorkingHours = shift.MinimumWorkingHours;
         existing.GraceTimeMinutes = shift.GraceTimeMinutes;
         existing.IsNightShift = shift.IsNightShift;
+        existing.IsFlexible = shift.IsFlexible;
+        existing.IsOvernight = shift.EndTime < shift.StartTime;
         existing.IsActive = shift.IsActive;
+        existing.Notes = shift.Notes;
 
         // Recalculate working hours
         var breakTimeHours = existing.BreakTimeMinutes / 60.0m;
@@ -235,5 +248,29 @@ public class ShiftService : IShiftService
     public async Task<IEnumerable<Shift>> GetActiveShiftsAsync()
     {
         return await _shiftRepository.GetActiveShiftsAsync();
+    }
+
+    /// <summary>
+    /// Get all shifts with navigation properties (Employees with Department)
+    /// </summary>
+    public async Task<IEnumerable<Shift>> GetAllShiftsWithIncludesAsync()
+    {
+        return await _shiftRepository.GetAllWithIncludesAsync();
+    }
+
+    /// <summary>
+    /// Get shift by ID with navigation properties
+    /// </summary>
+    public async Task<Shift?> GetShiftByIdWithIncludesAsync(long id)
+    {
+        return await _shiftRepository.GetByIdWithIncludesAsync(id);
+    }
+
+    /// <summary>
+    /// Get active shifts with navigation properties
+    /// </summary>
+    public async Task<IEnumerable<Shift>> GetActiveShiftsWithIncludesAsync()
+    {
+        return await _shiftRepository.GetActiveShiftsWithIncludesAsync();
     }
 }

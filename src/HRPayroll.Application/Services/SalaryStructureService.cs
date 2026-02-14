@@ -117,4 +117,36 @@ public class SalaryStructureService : ISalaryStructureService
     {
         return await _salaryStructureRepository.GetActiveStructuresAsync();
     }
+
+    /// <summary>
+    /// Get all salary structures with navigation properties (Employee, Department, Components)
+    /// </summary>
+    public async Task<IEnumerable<SalaryStructure>> GetAllSalaryStructuresWithIncludesAsync()
+    {
+        return await _salaryStructureRepository.GetAllWithIncludesAsync();
+    }
+
+    /// <summary>
+    /// Get salary structure by ID with navigation properties
+    /// </summary>
+    public async Task<SalaryStructure?> GetSalaryStructureByIdWithIncludesAsync(long id)
+    {
+        return await _salaryStructureRepository.GetByIdWithIncludesAsync(id);
+    }
+
+    /// <summary>
+    /// Get salary structure by employee ID with navigation properties
+    /// </summary>
+    public async Task<SalaryStructure?> GetByEmployeeIdWithIncludesAsync(long employeeId)
+    {
+        return await _salaryStructureRepository.GetByEmployeeIdWithIncludesAsync(employeeId);
+    }
+
+    /// <summary>
+    /// Get active salary structures with navigation properties
+    /// </summary>
+    public async Task<IEnumerable<SalaryStructure>> GetActiveStructuresWithIncludesAsync()
+    {
+        return await _salaryStructureRepository.GetActiveStructuresWithIncludesAsync();
+    }
 }

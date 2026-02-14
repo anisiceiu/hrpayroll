@@ -22,6 +22,7 @@ public static class InfrastructureExtensions
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();
         services.AddScoped<IDesignationRepository, DesignationRepository>();
         services.AddScoped<IShiftRepository, ShiftRepository>();
+        services.AddScoped<IEmployeeShiftRepository, EmployeeShiftRepository>();
         services.AddScoped<IAttendanceRepository, AttendanceRepository>();
         services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
         services.AddScoped<ILeaveRepository, LeaveRepository>();

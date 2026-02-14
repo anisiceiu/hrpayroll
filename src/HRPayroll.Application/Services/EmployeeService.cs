@@ -136,6 +136,30 @@ public class EmployeeService : IEmployeeService
         return await _employeeRepository.GetActiveEmployeesAsync();
     }
 
+    /// <summary>
+    /// Get all employees with navigation properties (Department, Designation, Shift, Manager, Supervisor)
+    /// </summary>
+    public async Task<IEnumerable<Employee>> GetAllEmployeesWithIncludesAsync()
+    {
+        return await _employeeRepository.GetAllWithIncludesAsync();
+    }
+
+    /// <summary>
+    /// Get employee by ID with navigation properties populated
+    /// </summary>
+    public async Task<Employee?> GetEmployeeByIdWithIncludesAsync(long id)
+    {
+        return await _employeeRepository.GetByIdWithIncludesAsync(id);
+    }
+
+    /// <summary>
+    /// Get active employees with navigation properties populated
+    /// </summary>
+    public async Task<IEnumerable<Employee>> GetActiveEmployeesWithIncludesAsync()
+    {
+        return await _employeeRepository.GetActiveEmployeesWithIncludesAsync();
+    }
+
     private async Task<string> GenerateEmployeeCodeAsync()
     {
         // Generate employee code in format EMP001, EMP002, etc.

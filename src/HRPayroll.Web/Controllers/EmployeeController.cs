@@ -59,13 +59,15 @@ public class EmployeeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var employees = await _employeeService.GetAllEmployeesAsync();
+        // Use GetAllEmployeesWithIncludesAsync to populate navigation properties
+        var employees = await _employeeService.GetAllEmployeesWithIncludesAsync();
         return View(employees);
     }
 
     public async Task<IActionResult> Details(long id)
     {
-        var employee = await _employeeService.GetEmployeeByIdAsync(id);
+        // Use GetEmployeeByIdWithIncludesAsync to populate navigation properties
+        var employee = await _employeeService.GetEmployeeByIdWithIncludesAsync(id);
         if (employee == null)
         {
             return NotFound();
@@ -109,7 +111,8 @@ public class EmployeeController : Controller
 
     public async Task<IActionResult> Edit(long id)
     {
-        var employee = await _employeeService.GetEmployeeByIdAsync(id);
+        // Use GetEmployeeByIdWithIncludesAsync to populate navigation properties
+        var employee = await _employeeService.GetEmployeeByIdWithIncludesAsync(id);
         if (employee == null)
         {
             return NotFound();

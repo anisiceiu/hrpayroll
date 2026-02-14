@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<Department> Departments { get; set; }
     public DbSet<Designation> Designations { get; set; }
     public DbSet<Shift> Shifts { get; set; }
+    public DbSet<EmployeeShift> EmployeeShifts { get; set; }    
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<LeaveType> LeaveTypes { get; set; }
     public DbSet<Leave> Leaves { get; set; }
@@ -202,8 +203,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<SalaryStructure>(entity =>
         {
             entity.HasOne(e => e.Employee)
-                  .WithMany()
-                  .HasForeignKey(e => e.EmployeeId)
+                  .WithOne(s => s.SalaryStructure)
+                  .HasForeignKey<SalaryStructure>(e => e.EmployeeId)
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
