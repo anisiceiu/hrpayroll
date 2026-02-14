@@ -23,6 +23,7 @@ public class AppDbContext : DbContext
     public DbSet<LeaveBalance> LeaveBalances { get; set; }
     public DbSet<Holiday> Holidays { get; set; }
     public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
+    public DbSet<DocumentCategory> DocumentCategories { get; set; }
     public DbSet<Recruitment> Recruitments { get; set; }
     public DbSet<Onboarding> Onboardings { get; set; }
     public DbSet<PerformanceAppraisal> PerformanceAppraisals { get; set; }

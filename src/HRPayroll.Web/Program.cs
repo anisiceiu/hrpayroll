@@ -1,6 +1,7 @@
 using Serilog;
 using HRPayroll.Infrastructure;
 using HRPayroll.Application;
+using HRPayroll.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();
+
+// Initialize database (seed default data)
+await DatabaseInitializer.InitializeAsync(app.Services);
 
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())

@@ -1,0 +1,138 @@
+@model HRPayroll.Domain.Entities.HR.EmployeeDocument
+@{
+    ViewData["Title"] = "Upload Document";
+    var employees = ViewBag.Employees as IEnumerable<HRPayroll.Domain.Entities.HR.Employee> ?? Enumerable.Empty<HRPayroll.Domain.Entities.HR.Employee>();
+    var categories = ViewBag.Categories as IEnumerable<HRPayroll.Domain.Entities.HR.DocumentCategory> ?? Enumerable.Empty<HRPayroll.Domain.Entities.HR.DocumentCategory>();
+
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Upload Employee Document</h3>
+            </div>
+            <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label>Employee *</label>
+                        <select name="EmployeeId" asp-items='@(new SelectList(employees,"Id","FullName"))' class="form-control select2" required>
+                            <option value="">Select Employee</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select name="CategoryId" asp-items='@((categories.Any() ? new SelectList(categories, "Id", "Name") : null))' class="form-control" required>
+                            <option value="">Select Category</option>
+                            @if (!categories.Any())
+                            {
+                                <option value="" disabled>No categories available</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Document Name *</label>
+                        <input name="DocumentName" class="form-control" required placeholder="e.g., NID Card, Passport" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="Description" class="form-control" rows="2" placeholder="Optional description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select File *</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="File" class="custom-file-input" id="documentFile" 
+                                       accept=".pdf,.doc,.docx,.jpeg,.jpg,.png" required />
+                                <label class="custom-file-label" for="documentFile">Choose file</label>
+                            </div>
+                        </div>
+                        <small class="text-muted">
+                            Allowed types: PDF, DOC, DOCX, JPEG, JPG, PNG. Max size: 10 MB
+                        </small>
+                        <div id="fileInfo" class="mt-2" style="display:none;">
+                            <div class="alert alert-info">
+                                <strong>File:</strong> <span id="fileName"></span><br />
+                                <strong>Size:</strong> <span id="fileSize"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="expiryDateGroup" style="display:none;">
+                        <label>Expiry Date</label>
+                        <input name="ExpiryDate" type="date" class="form-control" />
+                        <small class="text-muted">Leave empty if document doesn't expire</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input name="IsVerified" type="checkbox" class="custom-control-input" id="IsVerified" />
+                            <label class="custom-control-label" for="IsVerified">Mark as Verified</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea name="Notes" class="form-control" rows="2" placeholder="Internal notes"></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Show file info when selected
+            $('#documentFile').change(function() {
+                var file = this.files[0];
+                if (file) {
+                    $('#fileName').text(file.name);
+                    $('#fileSize').text((file.size / 1024 / 1024).toFixed(2) + ' MB');
+                    $('#fileInfo').show();
+                    
+                    // Validate file size
+                    var maxSize = 10 * 1024 * 1024; // 10 MB default
+                    var categorySelect = $('select[name="CategoryId"]');
+                    var selectedOption = categorySelect.find(':selected');
+                    if (selectedOption.data('maxsize')) {
+                        maxSize = selectedOption.data('maxsize') * 1024 * 1024;
+                    }
+                    
+                    if (file.size > maxSize) {
+                        alert('File size exceeds the maximum allowed size of ' + (maxSize / 1024 / 1024) + ' MB');
+                        $(this).val('');
+                        $('#fileInfo').hide();
+                    }
+                }
+            });
+
+            // Show/hide expiry date based on category
+            $('select[name="CategoryId"]').change(function() {
+                var selectedOption = $(this).find(':selected');
+                var hasExpiry = selectedOption.data('hasexpiry');
+                if (hasExpiry) {
+                    $('#expiryDateGroup').show();
+                } else {
+                    $('#expiryDateGroup').hide();
+                    $('input[name="ExpiryDate"]').val('');
+                }
+            });
+        });
+    </script>
+}

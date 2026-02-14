@@ -300,6 +300,153 @@ public class DocumentService : IDocumentService
 
         return document.FilePath;
     }
+
+    public async Task<byte[]> DownloadDocumentAsync(long documentId)
+    {
+        var document = await _documentRepository.GetByIdAsync(documentId);
+        if (document == null)
+        {
+            throw new Exception("Document not found.");
+        }
+
+        var filePath = Path.Combine(_environment.ContentRootPath, document.FilePath);
+        if (!File.Exists(filePath))
+        {
+            throw new Exception("File not found on server.");
+        }
+
+        return await File.ReadAllBytesAsync(filePath);
+    }
+
+    public async Task<HRPayroll.Domain.Entities.HR.EmployeeDocument> UpdateDocumentAsync(HRPayroll.Domain.Entities.HR.EmployeeDocument document)
+    {
+        var existing = await _documentRepository.GetByIdAsync(document.Id);
+        if (existing == null)
+        {
+            throw new Exception("Document not found.");
+        }
+
+        existing.DocumentName = document.DocumentName;
+        existing.CategoryId = document.CategoryId;
+        existing.Description = document.Description;
+        existing.ExpiryDate = document.ExpiryDate;
+
+        return await _documentRepository.UpdateAsync(existing);
+    }
+
+    public async Task<HRPayroll.Domain.Entities.HR.EmployeeDocument> ReplaceDocumentAsync(long documentId, HRPayroll.Domain.Entities.HR.EmployeeDocument newDocument)
+    {
+        var existing = await _documentRepository.GetByIdAsync(documentId);
+        if (existing == null)
+        {
+            throw new Exception("Document not found.");
+        }
+
+        // Delete old file
+        var oldFilePath = Path.Combine(_environment.ContentRootPath, existing.FilePath);
+        if (File.Exists(oldFilePath))
+        {
+            File.Delete(oldFilePath);
+        }
+
+        // Update document info
+        existing.FilePath = newDocument.FilePath;
+        existing.FileName = newDocument.FileName;
+        existing.FileExtension = newDocument.FileExtension;
+        existing.FileSize = newDocument.FileSize;
+
+        return await _documentRepository.UpdateAsync(existing);
+    }
+
+    public async Task<IEnumerable<HRPayroll.Domain.Entities.HR.EmployeeDocument>> GetByCategoryIdAsync(long categoryId)
+    {
+        return await _documentRepository.GetByCategoryIdAsync(categoryId);
+    }
+
+    public async Task<IEnumerable<HRPayroll.Domain.Entities.HR.EmployeeDocument>> GetAllDocumentsWithIncludesAsync()
+    {
+        return await _documentRepository.GetAllWithIncludesAsync();
+    }
+}
+
+/// <summary>
+/// DocumentCategory service implementation
+/// </summary>
+public class DocumentCategoryService : IDocumentCategoryService
+{
+    private readonly IDocumentCategoryRepository _categoryRepository;
+
+    public DocumentCategoryService(IDocumentCategoryRepository categoryRepository)
+    {
+        _categoryRepository = categoryRepository;
+    }
+
+    public async Task<IEnumerable<HRPayroll.Domain.Entities.HR.DocumentCategory>> GetAllCategoriesAsync()
+    {
+        return await _categoryRepository.GetAllAsync();
+    }
+
+    public async Task<HRPayroll.Domain.Entities.HR.DocumentCategory?> GetCategoryByIdAsync(long id)
+    {
+        return await _categoryRepository.GetByIdAsync(id);
+    }
+
+    public async Task<HRPayroll.Domain.Entities.HR.DocumentCategory> CreateCategoryAsync(HRPayroll.Domain.Entities.HR.DocumentCategory category)
+    {
+        // Check for duplicate code
+        var existing = await _categoryRepository.GetByCodeAsync(category.Code);
+        if (existing != null)
+        {
+            throw new Exception("A category with this code already exists.");
+        }
+
+        category.IsActive = true;
+        return await _categoryRepository.AddAsync(category);
+    }
+
+    public async Task<HRPayroll.Domain.Entities.HR.DocumentCategory> UpdateCategoryAsync(HRPayroll.Domain.Entities.HR.DocumentCategory category)
+    {
+        var existing = await _categoryRepository.GetByIdAsync(category.Id);
+        if (existing == null)
+        {
+            throw new Exception("Category not found.");
+        }
+
+        existing.Name = category.Name;
+        existing.NameBN = category.NameBN;
+        existing.Code = category.Code;
+        existing.Description = category.Description;
+        existing.DisplayOrder = category.DisplayOrder;
+        existing.IsActive = category.IsActive;
+        existing.HasExpiryDate = category.HasExpiryDate;
+        existing.MaxFileSizeMB = category.MaxFileSizeMB;
+
+        return await _categoryRepository.UpdateAsync(existing);
+    }
+
+    public async Task<bool> DeleteCategoryAsync(long id)
+    {
+        var category = await _categoryRepository.GetByIdAsync(id);
+        if (category == null)
+        {
+            throw new Exception("Category not found.");
+        }
+
+        // Check if category has documents
+        var documents = await _categoryRepository.GetByIdAsync(id);
+        if (documents != null && documents.Documents.Any())
+        {
+            throw new Exception("Cannot delete category that has documents. Remove or reassign documents first.");
+        }
+
+        await _categoryRepository.DeleteAsync(category);
+        return true;
+    }
+
+    public async Task<IEnumerable<HRPayroll.Domain.Entities.HR.DocumentCategory>> GetActiveCategoriesAsync()
+    {
+        return await _categoryRepository.GetActiveCategoriesAsync();
+    }
 }
 
 /// <summary>

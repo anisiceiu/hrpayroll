@@ -12,6 +12,11 @@ public class EmployeeDocument : AuditableEntity
     [Required]
     public long EmployeeId { get; set; }
 
+    /// <summary>
+    /// Category ID for the document
+    /// </summary>
+    public long? CategoryId { get; set; }
+
     [Required]
     [MaxLength(100)]
     public string DocumentName { get; set; } = string.Empty;
@@ -32,8 +37,16 @@ public class EmployeeDocument : AuditableEntity
     [MaxLength(50)]
     public string? FileExtension { get; set; }
 
-    [Column(TypeName = "decimal(18,2)")]
-    public decimal? FileSize { get; set; }
+    /// <summary>
+    /// File size in bytes
+    /// </summary>
+    public long? FileSize { get; set; }
+
+    /// <summary>
+    /// MIME content type
+    /// </summary>
+    [MaxLength(100)]
+    public string? ContentType { get; set; }
 
     public DateTime? ExpiryDate { get; set; }
 
@@ -42,10 +55,14 @@ public class EmployeeDocument : AuditableEntity
     public long? VerifiedBy { get; set; }
 
     public DateTime? VerifiedDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
     // Navigation properties
     [ForeignKey(nameof(EmployeeId))]
     public virtual Employee? Employee { get; set; }
+
+    [ForeignKey(nameof(CategoryId))]
+    public virtual DocumentCategory? Category { get; set; }
 
     [ForeignKey(nameof(VerifiedBy))]
     public virtual Employee? Verifier { get; set; }

@@ -29,6 +29,7 @@ public static class InfrastructureExtensions
         services.AddScoped<ILeaveBalanceRepository, LeaveBalanceRepository>();
         services.AddScoped<IHolidayRepository, HolidayRepository>();
         services.AddScoped<IDocumentRepository, DocumentRepository>();
+        services.AddScoped<IDocumentCategoryRepository, DocumentCategoryRepository>();
         services.AddScoped<ISalaryStructureRepository, SalaryStructureRepository>();
         services.AddScoped<ISalaryComponentRepository, SalaryComponentRepository>();
         services.AddScoped<IPayrollRunRepository, PayrollRunRepository>();

@@ -1,0 +1,79 @@
+@model HRPayroll.Domain.Entities.HR.DocumentCategory
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Create Document Category</h3>
+            </div>
+            <form asp-action="CreateCategory" method="post">
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="Name">Category Name *</label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g., Identity Documents" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Code">Code *</label>
+                        <input asp-for="Code" class="form-control" placeholder="e.g., IDENTITY" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                        <small class="form-text text-muted">Unique code for the category</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="NameBN">Name (Bangla)</label>
+                        <input asp-for="NameBN" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="DisplayOrder">Display Order</label>
+                        <input asp-for="DisplayOrder" type="number" class="form-control" value="0" />
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input asp-for="HasExpiryDate" type="checkbox" class="custom-control-input" id="HasExpiryDate" />
+                            <label class="custom-control-label" for="HasExpiryDate">Documents in this category can expire</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="MaxFileSizeMB">Max File Size (MB)</label>
+                        <input asp-for="MaxFileSizeMB" type="number" class="form-control" placeholder="10" />
+                        <small class="form-text text-muted">Leave empty for default (10 MB)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input asp-for="IsActive" type="checkbox" class="custom-control-input" id="IsActive" checked />
+                            <label class="custom-control-label" for="IsActive">Active</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create
+                    </button>
+                    <a asp-action="Categories" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -22,6 +22,7 @@ public static class ServiceExtensions
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IDocumentService, DocumentService>();
+        services.AddScoped<IDocumentCategoryService, DocumentCategoryService>();
         services.AddScoped<IESSService, ESSService>();
         services.AddScoped<ISalaryStructureService, SalaryStructureService>();
 

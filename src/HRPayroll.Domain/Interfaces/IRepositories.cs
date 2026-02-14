@@ -146,6 +146,18 @@ public interface IDocumentRepository : IRepository<Entities.HR.EmployeeDocument>
 {
     Task<IEnumerable<Entities.HR.EmployeeDocument>> GetByEmployeeIdAsync(long employeeId);
     Task<IEnumerable<Entities.HR.EmployeeDocument>> GetByTypeAsync(string documentType);
+    Task<IEnumerable<Entities.HR.EmployeeDocument>> GetByEmployeeIdWithIncludesAsync(long employeeId);
+    Task<IEnumerable<Entities.HR.EmployeeDocument>> GetByCategoryIdAsync(long categoryId);
+    Task<IEnumerable<Entities.HR.EmployeeDocument>> GetAllWithIncludesAsync();
+}
+
+/// <summary>
+/// DocumentCategory repository interface
+/// </summary>
+public interface IDocumentCategoryRepository : IRepository<Entities.HR.DocumentCategory>
+{
+    Task<Entities.HR.DocumentCategory?> GetByCodeAsync(string code);
+    Task<IEnumerable<Entities.HR.DocumentCategory>> GetActiveCategoriesAsync();
 }
 
 /// <summary>

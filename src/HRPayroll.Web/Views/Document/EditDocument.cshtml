@@ -1,0 +1,160 @@
+@model HRPayroll.Domain.Entities.HR.EmployeeDocument
+@{
+    ViewData["Title"] = "Edit Document";
+    var employees = ViewBag.Employees as IEnumerable<HRPayroll.Domain.Entities.HR.Employee> ?? Enumerable.Empty<HRPayroll.Domain.Entities.HR.Employee>();
+    var categories = ViewBag.Categories as IEnumerable<HRPayroll.Domain.Entities.HR.DocumentCategory> ?? Enumerable.Empty<HRPayroll.Domain.Entities.HR.DocumentCategory>();
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Edit Document</h3>
+            </div>
+            <form asp-action="EditDocument" method="post" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="FileName" />
+                    <input type="hidden" asp-for="FilePath" />
+                    <input type="hidden" asp-for="FileExtension" />
+                    <input type="hidden" asp-for="FileSize" />
+                    <input type="hidden" asp-for="ContentType" />
+
+                    <div class="form-group">
+                        <label>Employee *</label>
+                        <select name="EmployeeId" class="form-control select2" required asp-for="EmployeeId">
+                            <option value="">Select Employee</option>
+                            @foreach (var emp in employees)
+                            {
+                                <option value="@emp.Id">@emp.FullName (@emp.EmployeeCode)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select name="CategoryId" class="form-control" required asp-for="CategoryId" 
+                                onchange="toggleExpiryDate(this)">
+                            <option value="">Select Category</option>
+                            @foreach (var cat in categories)
+                            {
+                                <option value="@cat.Id" data-hasexpiry="@cat.HasExpiryDate" data-maxsize="@cat.MaxFileSizeMB">
+                                    @cat.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Document Name *</label>
+                        <input name="DocumentName" class="form-control" required asp-for="DocumentName" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="Description" class="form-control" rows="2" asp-for="Description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current File</label>
+                        <div class="alert alert-info">
+                            <i class="fas fa-file"></i> 
+                            <strong>@Model.DocumentName</strong> (@Model.FileExtension?.ToUpper() - 
+                            @((Model.FileSize ?? 0) / 1024).ToString("N0") KB)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Replace File</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="File" class="custom-file-input" id="documentFile" 
+                                       accept=".pdf,.doc,.docx,.jpeg,.jpg,.png" />
+                                <label class="custom-file-label" for="documentFile">Choose new file (optional)</label>
+                            </div>
+                        </div>
+                        <small class="text-muted">Leave empty to keep the existing file</small>
+                        <div id="fileInfo" class="mt-2" style="display:none;">
+                            <div class="alert alert-info">
+                                <strong>File:</strong> <span id="fileName"></span><br />
+                                <strong>Size:</strong> <span id="fileSize"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="expiryDateGroup">
+                        <label>Expiry Date</label>
+                        <input name="ExpiryDate" type="date" class="form-control" 
+                               value="@Model.ExpiryDate?.ToString("yyyy-MM-dd")" />
+                        <small class="text-muted">Leave empty if document doesn't expire</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input name="IsVerified" type="checkbox" class="custom-control-input" 
+                                   id="IsVerified" asp-for="IsVerified" />
+                            <label class="custom-control-label" for="IsVerified">Mark as Verified</label>
+                        </div>
+                    </div>
+
+                    @* <div class="form-group">
+                        <label>Notes</label>
+                        <textarea name="Notes" class="form-control" rows="2" asp-for="Notes"></textarea>
+                    </div> *@
+
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input name="IsActive" type="checkbox" class="custom-control-input" 
+                                   id="IsActive" asp-for="IsActive" />
+                            <label class="custom-control-label" for="IsActive">Active</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Show file info when selected
+            $('#documentFile').change(function() {
+                var file = this.files[0];
+                if (file) {
+                    $('#fileName').text(file.name);
+                    $('#fileSize').text((file.size / 1024 / 1024).toFixed(2) + ' MB');
+                    $('#fileInfo').show();
+                }
+            });
+
+            // Initialize expiry date visibility based on selected category
+            var categorySelect = $('select[name="CategoryId"]');
+            var selectedOption = categorySelect.find('option[value="' + categorySelect.val() + '"]');
+            if (selectedOption.length && selectedOption.data('hasexpiry')) {
+                $('#expiryDateGroup').show();
+            } else {
+                $('#expiryDateGroup').hide();
+            }
+        });
+
+        function toggleExpiryDate(select) {
+            var selectedOption = $(select).find(':selected');
+            var hasExpiry = selectedOption.data('hasexpiry');
+            if (hasExpiry) {
+                $('#expiryDateGroup').show();
+            } else {
+                $('#expiryDateGroup').hide();
+            }
+        }
+    </script>
+}

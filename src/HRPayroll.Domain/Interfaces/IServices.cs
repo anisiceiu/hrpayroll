@@ -201,8 +201,26 @@ public interface IDocumentService
     Task<IEnumerable<Entities.HR.EmployeeDocument>> GetByEmployeeIdAsync(long employeeId);
     Task<Entities.HR.EmployeeDocument?> GetDocumentByIdAsync(long id);
     Task<Entities.HR.EmployeeDocument> UploadDocumentAsync(Entities.HR.EmployeeDocument document);
+    Task<Entities.HR.EmployeeDocument> UpdateDocumentAsync(Entities.HR.EmployeeDocument document);
     Task<bool> DeleteDocumentAsync(long id);
     Task<string> GetDocumentPathAsync(long documentId);
+    Task<byte[]> DownloadDocumentAsync(long documentId);
+    Task<Entities.HR.EmployeeDocument> ReplaceDocumentAsync(long documentId, Entities.HR.EmployeeDocument newDocument);
+    Task<IEnumerable<Entities.HR.EmployeeDocument>> GetByCategoryIdAsync(long categoryId);
+    Task<IEnumerable<Entities.HR.EmployeeDocument>> GetAllDocumentsWithIncludesAsync();
+}
+
+/// <summary>
+/// DocumentCategory service interface
+/// </summary>
+public interface IDocumentCategoryService
+{
+    Task<IEnumerable<Entities.HR.DocumentCategory>> GetAllCategoriesAsync();
+    Task<Entities.HR.DocumentCategory?> GetCategoryByIdAsync(long id);
+    Task<Entities.HR.DocumentCategory> CreateCategoryAsync(Entities.HR.DocumentCategory category);
+    Task<Entities.HR.DocumentCategory> UpdateCategoryAsync(Entities.HR.DocumentCategory category);
+    Task<bool> DeleteCategoryAsync(long id);
+    Task<IEnumerable<Entities.HR.DocumentCategory>> GetActiveCategoriesAsync();
 }
 
 /// <summary>
