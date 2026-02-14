@@ -47,7 +47,7 @@ public class Attendance : AuditableEntity
     public DateTime? ApprovalDate { get; set; }
 
     [MaxLength(500)]
-    public string? Remarks { get; set; }
+    public new string? Remarks { get; set; }
 
     // Navigation properties
     [ForeignKey(nameof(EmployeeId))]

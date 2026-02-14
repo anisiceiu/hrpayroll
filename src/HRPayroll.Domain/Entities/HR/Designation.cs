@@ -35,7 +35,7 @@ public class Designation : AuditableEntity
     [Column(TypeName = "decimal(18,2)")]
     public decimal? BaseSalary { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     // Navigation properties
     [ForeignKey(nameof(DepartmentId))]

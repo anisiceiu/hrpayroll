@@ -235,17 +235,20 @@ public class PayrollService : IPayrollService
     private readonly IPayrollDetailRepository _payrollDetailRepository;
     private readonly IEmployeeRepository _employeeRepository;
     private readonly ITaxConfigRepository _taxConfigRepository;
+    private readonly AttendanceCalculationHelper _attendanceHelper;
 
     public PayrollService(
         IPayrollRunRepository payrollRunRepository,
         IPayrollDetailRepository payrollDetailRepository,
         IEmployeeRepository employeeRepository,
-        ITaxConfigRepository taxConfigRepository)
+        ITaxConfigRepository taxConfigRepository,
+        AttendanceCalculationHelper attendanceHelper)
     {
         _payrollRunRepository = payrollRunRepository;
         _payrollDetailRepository = payrollDetailRepository;
         _employeeRepository = employeeRepository;
         _taxConfigRepository = taxConfigRepository;
+        _attendanceHelper = attendanceHelper;
     }
 
     public async Task<IEnumerable<PayrollRun>> GetAllPayrollRunsAsync()
@@ -362,6 +365,10 @@ public class PayrollService : IPayrollService
             throw new Exception("Only approved payroll runs can be processed.");
         }
 
+        // Get date range from payroll run
+        var startDate = payrollRun.StartDate ?? new DateTime(payrollRun.Year, payrollRun.Month, 1);
+        var endDate = payrollRun.EndDate ?? startDate.AddMonths(1).AddDays(-1);
+
         // Get all active employees
         var employees = await _employeeRepository.GetActiveEmployeesAsync();
 
@@ -370,11 +377,15 @@ public class PayrollService : IPayrollService
             if(employee.SalaryStructure is null)
                 employee.SalaryStructure = new SalaryStructure();
 
+            // Calculate working days and paid days using the helper
+            var attendanceResult = await _attendanceHelper.CalculateAsync(
+                employee.Id, startDate, endDate);
+
             var payrollDetail = new PayrollDetail
             {
                 PayrollRunId = payrollRun.Id,
                 EmployeeId = (int)employee.Id,
-                BasicSalary = employee.SalaryStructure.BasicSalary, // Simplified - should calculate from salary structure
+                BasicSalary = employee.SalaryStructure.BasicSalary, 
                 GrossSalary = employee.SalaryStructure.GrossSalary,
                 TotalEarnings = employee.SalaryStructure.BasicSalary +
                                 employee.SalaryStructure.HouseRentAllowance +
@@ -384,8 +395,8 @@ public class PayrollService : IPayrollService
                 TotalDeductions = employee.SalaryStructure.TotalDeductions,
                 NetSalary = employee.SalaryStructure.NetSalary,
                 TaxAmount = employee.SalaryStructure.TaxDeduction,
-                WorkingDays = 22,
-                PaidDays = 22,
+                WorkingDays = attendanceResult.WorkingDays,
+                PaidDays = attendanceResult.PaidDays,
                 BankAccountNo = employee.BankAccountNo,
                 BankName = employee.BankName,
                 PaymentStatus = PaymentStatus.Pending

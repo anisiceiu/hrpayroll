@@ -57,7 +57,7 @@ public class Shift : AuditableEntity
     /// </summary>
     public bool IsOvernight { get; set; } = false;
 
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     /// <summary>
     /// Additional notes or description

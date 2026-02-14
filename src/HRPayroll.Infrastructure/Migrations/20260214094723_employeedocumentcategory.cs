@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HRPayroll.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class employeedocumentcategory : Migration
+    public partial class My_employeedocumentcategory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

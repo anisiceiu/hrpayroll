@@ -26,6 +26,9 @@ public static class ServiceExtensions
         services.AddScoped<IESSService, ESSService>();
         services.AddScoped<ISalaryStructureService, SalaryStructureService>();
 
+        // Register helper classes
+        services.AddScoped<AttendanceCalculationHelper>();
+
         return services;
     }
 }

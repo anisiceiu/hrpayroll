@@ -37,7 +37,7 @@ public class LeaveType : AuditableEntity
     [MaxLength(10)]
     public string? ColorCode { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     // Navigation properties
     public virtual ICollection<Leave> Leaves { get; set; } = new List<Leave>();

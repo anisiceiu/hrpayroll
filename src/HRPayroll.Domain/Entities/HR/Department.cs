@@ -27,7 +27,7 @@ public class Department : AuditableEntity
 
     public long? HeadOfDepartmentId { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     // Navigation properties
     [ForeignKey(nameof(ParentDepartmentId))]

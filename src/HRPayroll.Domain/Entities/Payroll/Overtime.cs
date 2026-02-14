@@ -32,7 +32,7 @@ public class Overtime : AuditableEntity
     public string? Description { get; set; }
 
     [MaxLength(500)]
-    public string? Remarks { get; set; }
+    public new string? Remarks { get; set; }
 
     public long? ApprovedById { get; set; }
 

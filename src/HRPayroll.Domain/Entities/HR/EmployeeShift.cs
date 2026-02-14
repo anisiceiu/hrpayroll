@@ -32,7 +32,7 @@ public class EmployeeShift : AuditableEntity
     /// <summary>
     /// Indicates if this is the current active assignment
     /// </summary>
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     /// <summary>
     /// Additional notes or remarks

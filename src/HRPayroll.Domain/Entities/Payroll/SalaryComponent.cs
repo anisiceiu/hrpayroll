@@ -40,7 +40,7 @@ public class SalaryComponent : AuditableEntity
 
     public int DisplayOrder { get; set; } = 0;
 
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     // Navigation properties
     [ForeignKey(nameof(SalaryStructureId))]

@@ -44,7 +44,7 @@ public class TaxConfig : AuditableEntity
 
     public DateTime? EffectiveTo { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     // Navigation properties
     public virtual ICollection<TaxSlab> TaxSlabs { get; set; } = new List<TaxSlab>();

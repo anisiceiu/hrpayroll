@@ -30,7 +30,7 @@ public class DocumentCategory : AuditableEntity
     /// <summary>
     /// Whether this category is active
     /// </summary>
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     /// <summary>
     /// Whether documents in this category can expire

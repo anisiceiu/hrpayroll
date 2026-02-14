@@ -33,7 +33,7 @@ public class TaxService : ITaxService
         }
 
         // Get annual salary (simplified - should get from payroll)
-        var annualSalary = 600000m; // Example: 50,000 monthly
+        //var annualSalary = 600000m; // Example: 50,000 monthly
 
         // Calculate annual tax
         var annualTax = await CalculateAnnualTaxAsync(employeeId, year);

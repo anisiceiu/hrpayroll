@@ -13,7 +13,7 @@ namespace HRPayroll.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260214094723_employeedocumentcategory")]
-    partial class employeedocumentcategory
+    partial class My_employeedocumentcategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

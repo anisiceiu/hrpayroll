@@ -54,7 +54,7 @@ public class PayrollDetail : AuditableEntity
     public decimal? OtherDeductions { get; set; }
 
     [MaxLength(500)]
-    public string? Remarks { get; set; }
+    public new string? Remarks { get; set; }
 
     public int? WorkingDays { get; set; }
 

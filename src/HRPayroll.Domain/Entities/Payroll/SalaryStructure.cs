@@ -58,7 +58,7 @@ public class SalaryStructure : AuditableEntity
 
     public DateTime? EffectiveTo { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public new bool IsActive { get; set; } = true;
 
     [MaxLength(500)]
     public string? Notes { get; set; }

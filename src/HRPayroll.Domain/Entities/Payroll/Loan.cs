@@ -46,7 +46,7 @@ public class Loan : AuditableEntity
     public string? Description { get; set; }
 
     [MaxLength(500)]
-    public string? Remarks { get; set; }
+    public new string? Remarks { get; set; }
 
     public long? ApprovedById { get; set; }
 
@@ -87,7 +87,7 @@ public class LoanRepayment : AuditableEntity
     public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
 
     [MaxLength(500)]
-    public string? Remarks { get; set; }
+    public new string? Remarks { get; set; }
 
     // Navigation properties
     [ForeignKey(nameof(LoanId))]
