@@ -137,6 +137,53 @@ public class AttendanceCalculationHelper
     }
 
     /// <summary>
+    /// Get today's attendance for a specific employee
+    /// </summary>
+    /// <param name="employeeId">Employee ID</param>
+    /// <returns>Today's attendance record if exists, null otherwise</returns>
+    public async Task<Attendance?> GetTodayAttendanceAsync(long employeeId)
+    {
+        return await _attendanceRepository.GetByEmployeeAndDateAsync(employeeId, DateTime.Today);
+    }
+
+    /// <summary>
+    /// Get all employees' attendance for today
+    /// </summary>
+    /// <returns>List of all employees' attendance for today</returns>
+    public async Task<IEnumerable<Attendance>> GetAllTodayAttendanceAsync()
+    {
+        return await _attendanceRepository.GetByDateAsync(DateTime.Today);
+    }
+
+    /// <summary>
+    /// Calculate today's attendance summary for an employee
+    /// </summary>
+    /// <param name="employeeId">Employee ID</param>
+    /// <returns>Attendance result for today</returns>
+    public async Task<AttendanceCalculationResult> CalculateTodayAttendanceAsync(long employeeId)
+    {
+        var today = DateTime.Today;
+        return await CalculateAsync(employeeId, today, today);
+    }
+
+    /// <summary>
+    /// Get attendance statistics for today (all employees)
+    /// </summary>
+    public async Task<(int Present, int Absent, int Late, int HalfDay, int OnLeave)> GetTodayStatisticsAsync()
+    {
+        var todayAttendance = await _attendanceRepository.GetByDateAsync(DateTime.Today);
+        var attendanceList = todayAttendance.ToList();
+
+        var present = attendanceList.Count(a => a.Status == AttendanceStatus.Present);
+        var absent = attendanceList.Count(a => a.Status == AttendanceStatus.Absent);
+        var late = attendanceList.Count(a => a.Status == AttendanceStatus.Late);
+        var halfDay = attendanceList.Count(a => a.Status == AttendanceStatus.HalfDay);
+        var onLeave = attendanceList.Count(a => a.Status == AttendanceStatus.Leave);
+
+        return (present, absent, late, halfDay, onLeave);
+    }
+
+    /// <summary>
     /// Count weekend days (Saturday and Sunday) in a date range
     /// </summary>
     private int CountWeekendDays(DateTime startDate, DateTime endDate)

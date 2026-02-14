@@ -1,9 +1,6 @@
-﻿@{
+﻿@model HRPayroll.Web.Models.DashboardViewModel
+@{
     ViewData["Title"] = "Dashboard";
-    var totalEmployee = ViewBag.TotalEmployees as int? ?? 0;
-    var totalDepartment = ViewBag.TotalDepartments as int? ?? 0;
-    var totalDesignation = ViewBag.TotalDesignations as int? ?? 0;
-    var totalShift = ViewBag.TotalShifts as int? ?? 0;
 }
 
 <div class="row">
@@ -11,7 +8,7 @@
         <!-- small card -->
         <div class="small-box bg-info">
             <div class="inner">
-                <h3>@totalEmployee</h3>
+                <h3>@Model.TotalEmployees</h3>
                 <p>Total Employees</p>
             </div>
             <div class="icon">
@@ -27,7 +24,7 @@
         <!-- small card -->
         <div class="small-box bg-success">
             <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
+                <h3>@Model.TodayPresent</h3>
                 <p>Present Today</p>
             </div>
             <div class="icon">
@@ -95,34 +92,39 @@
                         <thead>
                             <tr>
                                 <th>Employee</th>
-                                <th>Department</th>
                                 <th>Status</th>
                                 <th>Time In</th>
                                 <th>Time Out</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><a href="#">John Doe</a></td>
-                                <td>IT</td>
-                                <td><span class="badge badge-success">Present</span></td>
-                                <td>09:00 AM</td>
-                                <td>06:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td><a href="#">Jane Smith</a></td>
-                                <td>HR</td>
-                                <td><span class="badge badge-warning">Late</span></td>
-                                <td>09:30 AM</td>
-                                <td>06:00 PM</td>
-                            </tr>
-                            <tr>
-                                <td><a href="#">Bob Johnson</a></td>
-                                <td>Finance</td>
-                                <td><span class="badge badge-danger">Absent</span></td>
-                                <td>-</td>
-                                <td>-</td>
-                            </tr>
+                            @foreach(var attendance in Model.Attendances)
+                            {
+                                <tr>
+                                    <td><a href="@Url.Action("Details", "Employee", new { id = attendance.EmployeeId })">@attendance?.Employee?.FullName</a></td>
+                                    <td>
+                                        @if (attendance.Status == AttendanceStatus.Present)
+                                        {
+                                            <span class="badge badge-success">Present</span>
+                                        }
+                                        else if(attendance.Status == AttendanceStatus.Leave)
+                                        {
+                                            <span class="badge badge-warning">On Leave</span>
+                                        }
+                                        else if(attendance.Status == AttendanceStatus.Holiday)
+                                        {
+                                            <span class="badge badge-info">Holiday</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Absent</span>
+                                        }
+                                    </td>
+                                    <td> @(attendance.ClockInTime.HasValue? attendance.ClockInTime.Value.Hours.ToString("D2") + ":" + attendance.ClockInTime.Value.Minutes.ToString("D2") : "-")</td>
+                                    <td>@(attendance.ClockOutTime.HasValue? attendance.ClockOutTime.Value.Hours.ToString("D2") + ":" + attendance.ClockOutTime.Value.Minutes.ToString("D2") : "-")</td>
+                                </tr>
+                            }
+                           
                         </tbody>
                     </table>
                 </div>
@@ -144,7 +146,7 @@
             <span class="info-box-icon"><i class="fas fa-tag"></i></span>
             <div class="info-box-content">
                 <span class="info-box-text">Departments</span>
-                <span class="info-box-number">@totalDepartment</span>
+                <span class="info-box-number">@Model.TotalDepartments</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -153,7 +155,7 @@
             <span class="info-box-icon"><i class="fas fa-briefcase"></i></span>
             <div class="info-box-content">
                 <span class="info-box-text">Designations</span>
-                <span class="info-box-number">@totalDesignation</span>
+                <span class="info-box-number">@Model.TotalDesignations</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -171,7 +173,7 @@
             <span class="info-box-icon"><i class="fas fa-clock"></i></span>
             <div class="info-box-content">
                 <span class="info-box-text">Shifts</span>
-                <span class="info-box-number">@totalShift</span>
+                <span class="info-box-number">@Model.TotalShifts</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -191,9 +193,7 @@
             <div class="card-body p-0">
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     <li class="item">
-                        <div class="product-img">
-                            <img src="~/dist/img/default-150x150.png" alt="Product Image" class="img-size-50">
-                        </div>
+                        
                         <div class="product-info">
                             <a href="#" class="product-title">
                                 John Doe
@@ -206,9 +206,7 @@
                     </li>
                     <!-- /.item -->
                     <li class="item">
-                        <div class="product-img">
-                            <img src="~/dist/img/default-150x150.png" alt="Product Image" class="img-size-50">
-                        </div>
+                        
                         <div class="product-info">
                             <a href="#" class="product-title">
                                 Jane Smith

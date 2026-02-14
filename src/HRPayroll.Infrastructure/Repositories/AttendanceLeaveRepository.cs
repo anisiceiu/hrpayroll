@@ -34,7 +34,7 @@ public class AttendanceRepository : Repository<Attendance>, IAttendanceRepositor
 
     public async Task<IEnumerable<Attendance>> GetByDateAsync(DateTime date)
     {
-        return await _dbSet.Where(a => a.Date == date).ToListAsync();
+        return await _dbSet.Include(c=> c.Employee).Where(a => a.Date == date).ToListAsync();
     }
 
     public async Task<int> GetTodayPresentCountAsync()

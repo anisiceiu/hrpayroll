@@ -1,5 +1,7 @@
+using HRPayroll.Application.Services;
 using HRPayroll.Domain.Entities.HR;
 using HRPayroll.Domain.Interfaces;
+using HRPayroll.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRPayroll.Web.Controllers;
@@ -11,24 +13,39 @@ public class HomeController : Controller
     private readonly IDepartmentRepository _departmentRepository;
     private readonly IDesignationRepository _designationRepository;
     private readonly IShiftRepository _shiftRepository;
-    public HomeController(ILogger<HomeController> logger, IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository, IShiftRepository shiftRepository,IDesignationRepository  designationRepository)
+    private readonly AttendanceCalculationHelper  _attendanceCalculationHelper;
+    public HomeController(ILogger<HomeController> logger, IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository,
+        IShiftRepository shiftRepository,IDesignationRepository  designationRepository, AttendanceCalculationHelper attendanceCalculationHelper)
     {
         _logger = logger;
         _employeeRepository = employeeRepository;
         _departmentRepository = departmentRepository;
         _shiftRepository = shiftRepository;
         _designationRepository = designationRepository;
+        _attendanceCalculationHelper = attendanceCalculationHelper;
     }
 
     public async Task<IActionResult> Index()
     {
-        ViewBag.TotalEmployees = await _employeeRepository.GetActiveCountAsync();
-        ViewBag.TotalDepartments = await _departmentRepository.GetDepartmentCountAsync();
-        ViewBag.TotalDesignations = await _designationRepository.GetDesignationCountAsync();
-        ViewBag.TotalShifts = await _shiftRepository.GetShiftCountAsync();
-      
+        DashboardViewModel dashboardViewModel = new DashboardViewModel
+        {
+            TotalEmployees = await _employeeRepository.GetActiveCountAsync(),
+            TotalDepartments = await _departmentRepository.GetDepartmentCountAsync(),
+            TotalDesignations = await _designationRepository.GetDesignationCountAsync(),
+            TotalShifts = await _shiftRepository.GetShiftCountAsync()
+        };
+        
+        var (present, absent, late, halfDay, onLeave) = await _attendanceCalculationHelper.GetTodayStatisticsAsync();
 
-        return View();
+        dashboardViewModel.TodayPresent = present;
+        dashboardViewModel.TodayAbsent = absent;
+        dashboardViewModel.TodayLate = late;
+        dashboardViewModel.TodayHalfDay = halfDay;
+        dashboardViewModel.TodayLeave = onLeave;
+
+        dashboardViewModel.Attendances = (await _attendanceCalculationHelper.GetAllTodayAttendanceAsync()).ToList();
+
+        return View(dashboardViewModel);
     }
 
     public IActionResult Privacy()
