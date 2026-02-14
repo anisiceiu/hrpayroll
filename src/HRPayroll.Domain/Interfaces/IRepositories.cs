@@ -33,6 +33,7 @@ public interface IEmployeeRepository : IRepository<Entities.HR.Employee>
     Task<IEnumerable<Entities.HR.Employee>> GetActiveEmployeesWithSalaryStructureAsync();
     Task<int> GetTotalCountAsync();
     Task<int> GetActiveCountAsync();
+    
 }
 
 /// <summary>
@@ -44,6 +45,7 @@ public interface IDepartmentRepository : IRepository<Entities.HR.Department>
     Task<IEnumerable<Entities.HR.Department>> GetActiveDepartmentsAsync();
     Task<IEnumerable<Entities.HR.Department>> GetSubDepartmentsAsync(long parentId);
     Task<IEnumerable<Entities.HR.Department>> GetAllWithIncludesAsync();
+    Task<int> GetDepartmentCountAsync();
 }
 
 /// <summary>
@@ -55,6 +57,7 @@ public interface IDesignationRepository : IRepository<Entities.HR.Designation>
     Task<IEnumerable<Entities.HR.Designation>> GetByDepartmentIdAsync(long departmentId);
     Task<IEnumerable<Entities.HR.Designation>> GetActiveDesignationsAsync();
     Task<IEnumerable<Entities.HR.Designation>> GetAllWithIncludesAsync();
+    Task<int> GetDesignationCountAsync();
 }
 
 /// <summary>
@@ -68,6 +71,7 @@ public interface IShiftRepository : IRepository<Entities.HR.Shift>
     Task<IEnumerable<Entities.HR.Shift>> GetAllWithIncludesAsync();
     Task<Entities.HR.Shift?> GetByIdWithIncludesAsync(long id);
     Task<IEnumerable<Entities.HR.Shift>> GetActiveShiftsWithIncludesAsync();
+    Task<int> GetShiftCountAsync();
 }
 
 /// <summary>
@@ -90,6 +94,7 @@ public interface IEmployeeShiftRepository : IRepository<Entities.HR.EmployeeShif
 /// </summary>
 public interface IAttendanceRepository : IRepository<Entities.HR.Attendance>
 {
+    Task<IEnumerable<Entities.HR.Attendance>> GetAllWithIncludeAsync();
     Task<Entities.HR.Attendance?> GetByEmployeeAndDateAsync(long employeeId, DateTime date);
     Task<IEnumerable<Entities.HR.Attendance>> GetByEmployeeIdAsync(long employeeId);
     Task<IEnumerable<Entities.HR.Attendance>> GetByDateRangeAsync(long employeeId, DateTime startDate, DateTime endDate);

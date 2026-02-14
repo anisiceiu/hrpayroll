@@ -11,10 +11,12 @@ namespace HRPayroll.Web.Controllers
     public class PayrollController : Controller
     {
         private readonly IPayrollService _payrollService;
+        private readonly IEmployeeService _employeeService; // This will be used for employee dropdown in payslip generation
 
-        public PayrollController(IPayrollService payrollService)
+        public PayrollController(IPayrollService payrollService, IEmployeeService employeeService)
         {
             _payrollService = payrollService;
+            _employeeService = employeeService;
         }
 
         // GET: Payroll
@@ -348,8 +350,8 @@ namespace HRPayroll.Web.Controllers
         public async Task<IActionResult> GeneratePayslip(long? employeeId, int? month, int? year)
         {
             // Populate employee dropdown
-            var employees = await _payrollService.GetAllPayrollRunsAsync(); // This will be replaced with employee service
-            ViewBag.Employees = new SelectList(Enumerable.Empty<SelectListItem>());
+            var employees = await _employeeService.GetAllEmployeesAsync();
+            ViewBag.Employees = new SelectList(employees,"Id","FullName");
             
             // For now, use a simple list - in production, get from IEmployeeService
             ViewBag.MonthList = GetMonthList();

@@ -54,6 +54,11 @@ public class AttendanceRepository : Repository<Attendance>, IAttendanceRepositor
         var today = DateTime.Today;
         return await _dbSet.CountAsync(a => a.Date == today && a.Status == AttendanceStatus.Late);
     }
+
+    public async Task<IEnumerable<Attendance>> GetAllWithIncludeAsync()
+    {
+        return await _dbSet.Include(a => a.Employee).OrderByDescending(a => a.Date).ToListAsync();
+    }
 }
 
 /// <summary>

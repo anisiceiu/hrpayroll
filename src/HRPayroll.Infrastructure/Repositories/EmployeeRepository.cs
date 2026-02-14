@@ -140,6 +140,11 @@ public class DepartmentRepository : Repository<Department>, IDepartmentRepositor
     {
         return await _dbSet.Where(d => d.ParentDepartmentId == parentId).ToListAsync();
     }
+
+    public async Task<int> GetDepartmentCountAsync()
+    {
+        return await _dbSet.CountAsync();
+    }
 }
 
 /// <summary>
@@ -174,6 +179,11 @@ public class DesignationRepository : Repository<Designation>, IDesignationReposi
     public async Task<IEnumerable<Designation>> GetActiveDesignationsAsync()
     {
         return await _dbSet.Where(d => d.IsActive).ToListAsync();
+    }
+
+    public async Task<int> GetDesignationCountAsync()
+    {
+        return await _dbSet.CountAsync();
     }
 }
 
@@ -228,5 +238,10 @@ public class ShiftRepository : Repository<Shift>, IShiftRepository
             .Include(s => s.Employees)
                 .ThenInclude(e => e.Department)
             .ToListAsync();
+    }
+
+    public async Task<int> GetShiftCountAsync()
+    {
+        return await _dbSet.CountAsync();
     }
 }

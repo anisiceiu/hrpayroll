@@ -20,7 +20,7 @@ public class AttendanceService : IAttendanceService
 
     public async Task<IEnumerable<Attendance>> GetAllAttendancesAsync()
     {
-        return await _attendanceRepository.GetAllAsync();
+        return await _attendanceRepository.GetAllWithIncludeAsync();
     }
 
     public async Task<Attendance?> GetAttendanceByIdAsync(long id)
