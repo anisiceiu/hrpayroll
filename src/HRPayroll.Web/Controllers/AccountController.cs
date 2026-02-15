@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using HRPayroll.Domain.Identity;
 using HRPayroll.Web.Models;
 using HRPayroll.Domain.Enums;
+using HRPayroll.Domain.Interfaces;
 
 namespace HRPayroll.Web.Controllers;
 
@@ -13,17 +15,20 @@ public class AccountController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly ILogger<AccountController> _logger;
+    private readonly IEmployeeRepository _employeeRepository;
 
     public AccountController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         RoleManager<ApplicationRole> roleManager,
-        ILogger<AccountController> logger)
+        ILogger<AccountController> logger,
+        IEmployeeRepository employeeRepository)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
         _logger = logger;
+        _employeeRepository = employeeRepository;
     }
 
     [HttpGet]
@@ -78,6 +83,12 @@ public class AccountController : Controller
             {
                 return LocalRedirect(returnUrl);
             }
+            
+            // Redirect based on role
+            if (user.Role == UserRole.Employee)
+            {
+                return RedirectToAction("Index", "EmployeeDashboard");
+            }
             return RedirectToAction("Index", "Home");
         }
 
@@ -98,6 +109,7 @@ public class AccountController : Controller
     public IActionResult Register()
     {
         ViewBag.Roles = GetAvailableRoles();
+        ViewBag.Employees = new SelectList(_employeeRepository.GetAllWithIncludesAsync().Result, "Id", "FullName");
         return View();
     }
 
@@ -135,6 +147,7 @@ public class AccountController : Controller
             FirstName = model.FirstName,
             LastName = model.LastName,
             Role = model.Role,
+            EmployeeId = model.EmployeeId,
             IsActive = true,
             CreatedAt = DateTime.Now
         };

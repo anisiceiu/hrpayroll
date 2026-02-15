@@ -100,6 +100,11 @@ public interface IAttendanceService
     Task<int> GetTodayAbsentCountAsync();
     Task<int> GetTodayLateCountAsync();
     Task<bool> ImportFromBiometricAsync(IEnumerable<Entities.HR.Attendance> attendances);
+    
+    // Employee self-service clock in/out methods
+    Task<Entities.HR.Attendance> ClockInAsync(long employeeId);
+    Task<Entities.HR.Attendance?> ClockOutAsync(long employeeId);
+    Task<Entities.HR.Attendance?> GetTodayAttendanceAsync(long employeeId);
 }
 
 /// <summary>

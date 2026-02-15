@@ -35,4 +35,7 @@ public class RegisterViewModel
 
     [Display(Name = "Role")]
     public UserRole Role { get; set; } = UserRole.Employee;
+
+    [Display(Name = "Link to Employee")]
+    public long? EmployeeId { get; set; }
 }

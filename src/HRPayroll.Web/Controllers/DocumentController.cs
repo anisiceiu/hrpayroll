@@ -6,7 +6,7 @@ using HRPayroll.Domain.Interfaces;
 
 namespace HRPayroll.Web.Controllers;
 
-[Authorize]
+[Authorize(Roles = "SystemAdmin")]
 public class DocumentController : Controller
 {
     private readonly IDocumentService _documentService;

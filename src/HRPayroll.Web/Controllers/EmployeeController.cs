@@ -6,7 +6,7 @@ using HRPayroll.Domain.Entities.HR;
 
 namespace HRPayroll.Web.Controllers;
 
-[Authorize]
+[Authorize(Roles = "SystemAdmin")]
 public class EmployeeController : Controller
 {
     private readonly IEmployeeService _employeeService;

@@ -3,11 +3,13 @@ using HRPayroll.Domain.Entities.Payroll;
 using HRPayroll.Domain.Enums;
 using HRPayroll.Domain.Interfaces;
 using HRPayroll.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HRPayroll.Web.Controllers
 {
+    [Authorize(Roles = "SystemAdmin")]
     public class PayrollController : Controller
     {
         private readonly IPayrollService _payrollService;

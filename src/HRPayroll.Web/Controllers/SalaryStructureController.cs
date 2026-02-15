@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HRPayroll.Web.Controllers;
 
-[Authorize]
+[Authorize(Roles = "SystemAdmin")]
 public class SalaryStructureController : Controller
 {
     private readonly ISalaryStructureService _salaryStructureService;

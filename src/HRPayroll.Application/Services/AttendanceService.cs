@@ -126,6 +126,138 @@ public class AttendanceService : IAttendanceService
 
         return true;
     }
+
+    /// <summary>
+    /// Employee clocks in - creates a new attendance record for today
+    /// </summary>
+    public async Task<Attendance> ClockInAsync(long employeeId)
+    {
+        var today = DateTime.Today;
+        
+        // Check if already clocked in today
+        var existing = await _attendanceRepository.GetByEmployeeAndDateAsync(employeeId, today);
+        if (existing != null && existing.ClockInTime.HasValue)
+        {
+            throw new Exception("You have already clocked in today.");
+        }
+
+        var employee = await _employeeRepository.GetByIdAsync(employeeId);
+        if (employee == null)
+        {
+            throw new Exception("Employee not found.");
+        }
+
+        var now = DateTime.Now;
+        var clockInTime = now.TimeOfDay;
+
+        // Determine status based on shift timing
+        var status = AttendanceStatus.Present;
+        int? lateMinutes = null;
+
+        if (employee.Shift != null)
+        {
+            var graceTimeInMinutes = employee.Shift.GraceTimeMinutes;
+            var allowedTime = employee.Shift.StartTime.TotalMinutes + graceTimeInMinutes;
+            var clockInMinutes = clockInTime.TotalMinutes;
+
+            if (clockInMinutes > allowedTime)
+            {
+                status = AttendanceStatus.Late;
+                lateMinutes = (int)(clockInMinutes - employee.Shift.StartTime.TotalMinutes);
+            }
+        }
+
+        // If record exists but clock in was not set, update it
+        if (existing != null)
+        {
+            existing.ClockInTime = clockInTime;
+            existing.Status = status;
+            existing.LateMinutes = lateMinutes;
+            existing.EntryType = EntryType.Web;
+            return await _attendanceRepository.UpdateAsync(existing);
+        }
+
+        // Create new attendance record
+        var attendance = new Attendance
+        {
+            EmployeeId = employeeId,
+            Date = today,
+            ClockInTime = clockInTime,
+            Status = status,
+            LateMinutes = lateMinutes,
+            EntryType = EntryType.Web
+        };
+
+        return await _attendanceRepository.AddAsync(attendance);
+    }
+
+    /// <summary>
+    /// Employee clocks out - updates the existing attendance record for today
+    /// </summary>
+    public async Task<Attendance?> ClockOutAsync(long employeeId)
+    {
+        var today = DateTime.Today;
+        var existing = await _attendanceRepository.GetByEmployeeAndDateAsync(employeeId, today);
+
+        if (existing == null || !existing.ClockInTime.HasValue)
+        {
+            throw new Exception("You have not clocked in today.");
+        }
+
+        if (existing.ClockOutTime.HasValue)
+        {
+            throw new Exception("You have already clocked out today.");
+        }
+
+        var now = DateTime.Now;
+        var clockOutTime = now.TimeOfDay;
+        var clockInTime = existing.ClockInTime.Value;
+
+        // Calculate working hours
+        double totalMinutes = (clockOutTime - clockInTime).TotalMinutes;
+        if (totalMinutes < 0)
+        {
+            // Handle overnight shifts
+            totalMinutes += 24 * 60;
+        }
+        var workingHours = (decimal)(totalMinutes / 60);
+
+        // Check for early leaving
+        var employee = await _employeeRepository.GetByIdAsync(employeeId);
+        int? earlyLeavingMinutes = null;
+        if (employee?.Shift != null)
+        {
+            var expectedEndMinutes = employee.Shift.EndTime.TotalMinutes;
+            var actualEndMinutes = clockOutTime.TotalMinutes;
+
+            if (actualEndMinutes < expectedEndMinutes - 30) // 30 min grace
+            {
+                earlyLeavingMinutes = (int)(expectedEndMinutes - actualEndMinutes);
+            }
+
+            // Calculate overtime if worked more than scheduled
+            if (totalMinutes > (employee.Shift.EndTime - employee.Shift.StartTime).TotalMinutes)
+            {
+                var overtimeMinutes = totalMinutes - (employee.Shift.EndTime - employee.Shift.StartTime).TotalMinutes;
+                existing.OvertimeHours = (decimal)(overtimeMinutes / 60);
+            }
+        }
+
+        existing.ClockOutTime = clockOutTime;
+        existing.WorkingHours = workingHours;
+        existing.EarlyLeavingMinutes = earlyLeavingMinutes;
+        existing.EntryType = EntryType.Web;
+
+        return await _attendanceRepository.UpdateAsync(existing);
+    }
+
+    /// <summary>
+    /// Get today's attendance record for an employee
+    /// </summary>
+    public async Task<Attendance?> GetTodayAttendanceAsync(long employeeId)
+    {
+        return await _attendanceRepository.GetByEmployeeAndDateAsync(employeeId, DateTime.Today);
+    }
 }
 
 /// <summary>

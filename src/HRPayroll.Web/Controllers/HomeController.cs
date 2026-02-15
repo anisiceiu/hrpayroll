@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HRPayroll.Web.Controllers;
 
-[Authorize]
+[Authorize(Roles = "SystemAdmin,Admin")]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

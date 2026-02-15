@@ -72,6 +72,17 @@
                 <span asp-validation-for="Role" class="text-danger"></span>
                 
                 <div class="input-group mb-3">
+                    <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.Employees">
+                        <option value="">Select Employee (Optional)</option>
+                    </select>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group mb-3">
                     <input asp-for="Password" class="form-control" placeholder="Password" />
                     <div class="input-group-append">
                         <div class="input-group-text">

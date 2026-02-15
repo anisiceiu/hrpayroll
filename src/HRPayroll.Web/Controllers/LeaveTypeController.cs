@@ -1,10 +1,12 @@
 using HRPayroll.Domain.Entities.HR;
 using HRPayroll.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HRPayroll.Web.Controllers
 {
+    [Authorize(Roles = "SystemAdmin")]
     public class LeaveTypeController : Controller
     {
         private readonly ILeaveTypeService _leaveTypeService;

@@ -5,7 +5,7 @@ using HRPayroll.Domain.Entities.HR;
 
 namespace HRPayroll.Web.Controllers;
 
-[Authorize]
+[Authorize(Roles = "SystemAdmin")]
 public class DepartmentController : Controller
 {
     private readonly IDepartmentService _departmentService;

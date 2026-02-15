@@ -1,0 +1,174 @@
+@model HRPayroll.Web.Controllers.EmployeeDashboardViewModel
+@{
+    ViewData["Title"] = "My Dashboard";
+    Layout = "_LayoutEmployee";
+}
+
+<!-- Clock In/Out Card -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Attendance</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Employee Info -->
+                    <div class="col-md-4">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info"><i class="fas fa-user"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Employee Name</span>
+                                <span class="info-box-number">@Model.EmployeeName</span>
+                                <span class="info-box-text">@Model.Department - @Model.Designation</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shift Info -->
+                    <div class="col-md-4">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-warning"><i class="fas fa-clock"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Shift Timing</span>
+                                <span class="info-box-number">@Model.ShiftStart - @Model.ShiftEnd</span>
+                                <span class="info-box-text">Current Time: @Model.CurrentTime.ToString("hh:mm:ss tt")</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="col-md-4">
+                        <div class="info-box">
+                            @if (Model.IsClockedOut)
+                            {
+                                <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
+                            }
+                            else if (Model.IsClockedIn)
+                            {
+                                <span class="info-box-icon bg-primary"><i class="fas fa-sign-in-alt"></i></span>
+                            }
+                            else
+                            {
+                                <span class="info-box-icon bg-secondary"><i class="fas fa-clock"></i></span>
+                            }
+                            <div class="info-box-content">
+                                <span class="info-box-text">Today's Status</span>
+                                <span class="info-box-number">@Model.StatusText</span>
+                                @if (Model.IsClockedIn && !Model.IsClockedOut)
+                                {
+                                    <span class="text-success">Working...</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clock In/Out Buttons -->
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center">
+                        @if (!Model.IsClockedIn)
+                        {
+                            <form asp-action="ClockIn" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-lg btn-success btn-clock">
+                                    <i class="fas fa-sign-in-alt"></i> CLOCK IN
+                                </button>
+                            </form>
+                        }
+                        else if (!Model.IsClockedOut)
+                        {
+                            <form asp-action="ClockOut" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-lg btn-danger btn-clock">
+                                    <i class="fas fa-sign-out-alt"></i> CLOCK OUT
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success">
+                                <h5><i class="icon fas fa-check"></i> You have completed your work for today!</h5>
+                                <p>Total working hours: @Model.WorkingHoursText hours</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+                <!-- Today's Details -->
+                @if (Model.TodayAttendance != null)
+                {
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Today's Details</h3>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Clock In Time</th>
+                                            <td>@Model.ClockInText</td>
+                                            <th>Clock Out Time</th>
+                                            <td>@Model.ClockOutText</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Working Hours</th>
+                                            <td>@Model.WorkingHoursText hrs</td>
+                                            <th>Status</th>
+                                            <td>
+                                                @if (Model.TodayAttendance.Status == AttendanceStatus.Present)
+                                                {
+                                                    <span class="badge badge-success">Present</span>
+                                                }
+                                                else if (Model.TodayAttendance.Status == AttendanceStatus.Late)
+                                                {
+                                                    <span class="badge badge-warning">Late</span>
+                                                }
+                                                else if (Model.TodayAttendance.Status == AttendanceStatus.Absent)
+                                                {
+                                                    <span class="badge badge-danger">Absent</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Links -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Quick Links</h3>
+            </div>
+            <div class="card-body">
+                <a asp-controller="EmployeeDashboard" asp-action="MyAttendance" class="btn btn-primary btn-block">
+                    <i class="fas fa-calendar-alt"></i> View My Attendance
+                </a>
+                <a asp-controller="Leave" asp-action="MyLeaves" class="btn btn-warning btn-block">
+                    <i class="fas fa-calendar-minus"></i> My Leave Requests
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-clock {
+        padding: 20px 60px;
+        font-size: 18px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .btn-clock:hover {
+        transform: scale(1.05);
+    }
+</style>
